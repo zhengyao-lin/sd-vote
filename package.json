@@ -1,0 +1,30 @@
+{
+	"name": "sd-vote",
+	"version": "0.0.0",
+	"description": "",
+	"main": "main.js",
+	"dependencies": {
+		"body-parser": "~1.16.0",
+		"express": "~4.14.1",
+		"mongodb": "~2.2.22",
+		"multiparty": "~4.1.3"
+	},
+	"devDependencies": {
+		"express": "*",
+		"body-parser": "*",
+		"multiparty": "*",
+		"mongodb": "*"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/rod-lin/sd-vote.git"
+	},
+	"author": "",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/rod-lin/sd-vote/issues"
+	}
+}

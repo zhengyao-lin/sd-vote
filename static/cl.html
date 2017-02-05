@@ -1,0 +1,520 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+		
+		<link rel="stylesheet" href="font/fontawesome/import.css" />
+		<link rel="stylesheet" href="font/alegreya/import.css" />
+		<link rel="stylesheet" href="css/sv.css" />
+
+		<script src="js/jquery.js"></script>
+	</head>
+
+	<body>
+		<div id="sv-container">
+			<div id="sv-cover">
+				<div id="sv-qtitle" class="sv-noselect">
+					<span style="font-size: 140%;">星元</span><br>
+					<span>头像投票</span><br>
+					<span style="font-size: 50%;">狂戳继续</span>
+				</div>
+			</div>
+
+			<div id="sv-main">
+				<div id="sv-showcase" class="sv-noselect">
+					<div style="padding-bottom: 1em;">
+						<div id="sv-tip" style="font-family: mini-jiankai;">
+							长按选项查看大图<br>点击大勾勾提交
+						</div>
+						
+						<!--div class="sv-selebox">
+							<div class="sv-thumb sv-img"></div>
+							<div class="sv-namecard">David!</div>
+							<div class="sv-selebox-checked-layer"><span class="fa fa-check sv-selebox-check sv-vcenter"></span></div>
+						</div>
+
+						<div class="sv-selebox">
+							<div class="sv-thumb sv-img"></div>
+							<div class="sv-namecard">Rod!</div>
+							<div class="sv-selebox-checked-layer"><span class="fa fa-check sv-selebox-check sv-vcenter"></span></div>
+						</div-->
+
+						<div id="sv-tag-1" style="display: none;"></div>
+
+						<div class="sv-selebox sv-selebox-btn">
+							<div id="sv-addbtn" class="sv-addbtn">
+								<span id="sv-addsymb" class="fa fa-plus"></span>
+							</div>
+						</div>
+
+						<div class="sv-selebox sv-selebox-btn">
+							<div id="sv-submbtn" class="sv-submbtn">
+								<span id="sv-submsymb" class="fa fa-check"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="sv-shade" style="display: none; opacity: 0;"></div>
+
+				<div id="sv-detail" class="sv-detail-box">
+					<span id="sv-detail-back" class="fa fa-arrow-left">
+						<span id="sv-detail-descr"></span>
+					</span><br>
+					<img id="sv-detail-img-cont"><br>
+				</div>
+			</div>
+
+			<div id="sv-load">
+				<span class="fa fa-rocket fa-spin sv-vcenter" style="font-size: 5em; margin-bottom: 1em;"></span>
+			</div>
+
+			<div id="sv-newicon" style="">
+				<span id="sv-newicon-back" class="fa fa-arrow-left">
+					<span style="font-family: tekai; margin-left: 1em;">增加选项</span>
+				</span>
+				<span id="sv-newicon-submit" class="sv-newicon-submit">提交</span>
+				<form id="sv-newicon-form" action="/vote/reg" method="post"
+					  style="display: none;" enctype="multipart/form-data">
+					<input id="sv-newicon-form-photo" type="file" name="photo" />
+					<input id="sv-newicon-form-name" type="text" name="name" />
+					<input id="sv-newicon-form-descr" type="text" name="descr" />
+				</form>
+				<div id="sv-newicon-img" style="margin: 4em 0;">
+					<span class="fa fa-plus" style="font-size: 5em; cursor: pointer;">
+						<br><span style="font-size: 0.5em; font-family: tekai;">
+							假装有预览图
+						</span>
+					</span>
+				</div>
+				<div id="sv-newicon-descr-box">
+					<span style="font-size: 1em; font-family: tekai;">名字</span><br>
+					<input id="sv-newicon-name" class="sv-newivon-nameinput" /><br><br>
+					<span style="font-size: 1em; font-family: tekai;">简单介绍</span><br>
+					<textarea id="sv-newicon-descr" class="sv-newicon-descr"></textarea><br>
+				</div>
+			</div>
+
+			<div id="sv-msgbox" style="top: -100%;">
+				<div id="sv-msg" class="sv-noselect sv-vcenter"></div>
+			</div>
+		</div>
+
+		<script>
+			Array.prototype.choose = function () {
+				return this[Math.floor(Math.random() * this.length)];
+			};
+
+			(function ($) {
+				var color_box = [ "#1ABC9C", "#2ECC71", "#3498DB", "#9B59B6", "#E67E22", "#E74C3C" ];
+
+				function _setVCenter(pr, e) {
+					e.css("top", ((pr.height() - e.outerHeight(true)) / 2) + "px");
+					return;
+				}
+
+				function _updatePos() {
+					_setVCenter($("#sv-main"), $("#sv-qtitle"));
+					_setVCenter($("#sv-addbtn"), $("#sv-addsymb"));
+					_setVCenter($("#sv-submbtn"), $("#sv-submsymb"));
+
+					var e = $(".sv-vcenter");
+					var i;
+
+					for (i = 0; i < e.length; i++) {
+						_setVCenter($(e[i]).parent(), $(e[i]));
+					}
+
+					return;
+				}
+
+				function _showNewIcon() {
+					$("#sv-newicon").css("left", "0");
+					$("#sv-newicon").css("box-shadow", "0px 0 5px rgba(0, 0, 0, 0.7)");
+					return;
+				}
+
+				function _hideNewIcon() {
+					$("#sv-newicon").css("left", "100%");
+					$("#sv-newicon").css("box-shadow", "");
+					return;
+				}
+
+				function _showLoad() {
+					$("#sv-load").css("display", "");
+					$("#sv-load").css("opacity", "1");
+					_updatePos();
+					return;
+				}
+
+				function _hideLoad() {
+					$("#sv-load").css("opacity", "0");
+					setTimeout(function () {
+						$("#sv-load").css("display", "none");
+					}, 300);
+					return;
+				}
+
+				function _showThanks() {
+					_msg(' \
+						<span class="fa fa-check" style="font-size: 2em;"></span><br> \
+						<span style="font-size: 1em; font-family: tekai;">谢谢</span> \
+					', 0, "#2ECC71");
+					return;
+				}
+
+				function _showShade() {
+					$("#sv-shade").css("display", "");
+					$("#sv-shade").css("opacity", "1");
+					return;
+				}
+
+				function _hideShade() {
+					$("#sv-shade").css("opacity", "0");
+					setTimeout(function () {
+						$("#sv-shade").css("display", "none");
+					}, 300);
+					return;
+				}
+
+				function _openDetail(e) {
+					var candid = parseInt($(e).find("#sv-tag-candid").html());
+
+					if (isNaN(candid)) return;
+
+					$("#sv-detail-img-cont").attr("src", "/upload/" + _allcand[candid].photo);
+					$("#sv-detail-descr").html(_allcand[candid].descr);
+
+					// $("#sv-detail").css("background", color_box.choose());
+					$("#sv-detail").css("left", "0");
+					$("#sv-detail").css("box-shadow", "0px 0 5px rgba(0, 0, 0, 0.7)");
+					// _showShade();
+
+					_updatePos();
+
+					return;
+				}
+
+				function _closeDetail() {
+					$("#sv-detail").css("left", "100%");
+					$("#sv-detail").css("box-shadow", "");
+					// _hideShade();
+
+					return;
+				}
+
+				function _exitCover() {
+					$("#sv-cover").css("left", "-100%");
+
+					return;
+				}
+
+				var _msg_show = false;
+				var _msg_hide_proc = null;
+				var _msg_hide = function () {
+					if (_msg_show) {
+						_msg_show = false;
+						if (_msg_hide_proc) {
+							clearTimeout(_msg_hide_proc);
+							_msg_hide_proc = null;
+						}
+
+						$("#sv-msgbox").css("top", "-100%");
+					}
+				};
+
+				function _msg(msg, timeout, color) {
+					// alert(msg);
+
+					_msg_show = true;
+
+					$("#sv-msg").html(msg);
+					$("#sv-msgbox").css("top", "0");
+					$("#sv-msgbox").css("background", color || color_box.choose());
+
+					_updatePos();
+
+					if (timeout != 0) {
+						_msg_hide_proc = setTimeout(_msg_hide, timeout || 3000);
+					}
+
+					return;
+				}
+
+				function _check() {
+					$(this).toggleClass("sv-selebox-checked");
+					var candid = parseInt($(this).find("#sv-tag-candid").html());
+					
+					if (isNaN(candid)) {
+						_msg("that's... not a candidate");
+						return;
+					}
+
+					_allcand[candid].checked = $(this).hasClass("sv-selebox-checked");
+
+					return;
+				}
+
+				function _longpress(e) {
+					_openDetail(e);
+				}
+
+				function _submit() {
+					var i;
+					var selected = [];
+
+					for (i = 0; i < _allcand.length; i++) {
+						if (_allcand[i].checked)
+							selected.push(_allcand[i].id.toString());
+					}
+
+					if (!selected.length) {
+						_msg("你还没有选呢");
+						return;
+					}
+
+					if (selected.length > 3) {
+						_msg("最多选三个哦");
+						return;
+					}
+
+					var _show = function () {
+						$("#sv-submsymb").removeClass("fa-check");
+						$("#sv-submsymb").addClass("fa-cog");
+						$("#sv-submsymb").addClass("fa-spin");
+					};
+
+					var _hide = function () {
+						$("#sv-submsymb").addClass("fa-check");
+						$("#sv-submsymb").removeClass("fa-cog");
+						$("#sv-submsymb").removeClass("fa-spin");
+					}
+
+					_show();
+
+					$.ajax({
+						url: "/vote/poll",
+						type: "GET",
+						data: {
+							cand: selected.join("|")
+						},
+
+						success: function (dat) {
+							var dat = JSON.parse(dat);
+
+							setTimeout(function () {
+								if (!dat.suc) {
+									_msg(dat.msg);
+								} else {
+									_showThanks();
+								}
+
+								_hide();
+							}, 500);
+
+							return;
+						},
+
+						error: function () {
+							setTimeout(function () {
+								_msg("服务器炸了!");
+								_hide();
+							}, 500);
+							return;
+						}
+					});
+
+					return;
+				}
+
+				function _addicon() {
+					_showNewIcon();
+				}
+
+				function _uploadIcon() {
+					$("#sv-newicon-form-photo").click();
+				}
+
+				function _sumbitNewIcon() {
+					var name = $("#sv-newicon-name").val();
+					var descr = $("#sv-newicon-descr").val();
+
+					if (!name || !name.length) {
+						_msg("额,没有名字");
+						return;
+					}
+
+					if (!descr || !descr.length) {
+						_msg("没有描述orz");
+						return;
+					}
+
+					if (!$("#sv-newicon-form-photo").val()) {
+						_msg("没有图片啊啊啊");
+						return;
+					}
+
+					$("#sv-newicon-form-name").val(name);
+					$("#sv-newicon-form-descr").val(descr);
+
+					// $("#sv-newicon-form").submit();
+
+					var form = $("#sv-newicon-form")[0];
+
+					_showLoad();
+
+					$.ajax({
+						url: "/vote/reg",
+						type: "POST",
+						data: new FormData(form),
+						processData: false,
+						contentType: false,
+						success: function (data) {
+							var dat = JSON.parse(data);
+
+							if (!dat.suc) {
+								_msg(dat.msg);
+								setTimeout(_hideLoad, 1000);
+								return;
+							}
+
+							setTimeout(function () {
+								_showThanks();
+								setTimeout(_hideLoad, 1000);
+
+								setTimeout(function () {
+									window.location = window.location;
+								}, 2000);
+							}, 500);
+						},
+
+						error: function () {
+							_msg("服务器炸了!");
+							setTimeout(_hideLoad, 500);
+							return;
+						}
+					});
+
+					return;
+				}
+
+				var _allcand = null;
+
+				function truncdig(num, n) {
+					var k = Math.pow(10, n);
+					return Math.round(num * k) / k;
+				}
+
+				function _sync() {
+					var resp = $.ajax({ url: "/vote/get", type: "GET", async: false }).responseText;
+					var resp = JSON.parse(resp);
+
+					if (!resp.suc) {
+						_msg("server busy");
+						return;
+					}
+
+					var allcand = resp.dat;
+					var i = 0, j, k, tmp;
+					var tag = $("#sv-tag-1");
+
+					for (i = 0; i < (allcand.length / 2); i++) {
+						j = Math.floor(Math.random() * allcand.length);
+						k = Math.floor(Math.random() * allcand.length);
+						tmp = allcand[j];
+						allcand[j] = allcand[k];
+						allcand[k] = tmp;
+					}
+
+					var sum = 0;
+
+					for (i = 0; i < allcand.length; i++) {
+						sum += allcand[i].poll;
+					}
+
+					allcand.sort(function (a, b) {
+						return b.poll - a.poll
+					});
+
+					for (i = 0; i < allcand.length; i++) {
+						var tmp =
+						'<div class="sv-selebox"> \
+							<div class="sv-thumb sv-img" style="background-image: url(\'/upload/' + allcand[i].photo + '\');"></div> \
+							<div class="sv-namecard">' +
+								(i < 3 ? "<span class='fa fa-star sv-namecard-star sv-namecard-star-" + (i + 1) + "'></span>" : "") + 
+								allcand[i].name + ' (' + allcand[i].poll + (allcand[i].poll > 1 ? " votes, " : " vote, ") + (sum ? truncdig(allcand[i].poll / sum * 100, 2) : "0") + '%)' +
+							'</div> \
+							<div class="sv-selebox-checked-layer"><span class="fa fa-check sv-selebox-check sv-vcenter"></span></div> \
+							<div id="sv-tag-candid" style="display: none;">' + i + '</div> \
+						</div>';
+
+						// TODO: !!inject
+						tag.before(tmp);
+					}
+
+					_allcand = allcand;
+
+					_bondbox();
+					_updatePos();
+				}
+
+				function _bondbox() {
+					$(".sv-selebox:not(.sv-selebox-btn)").click(_check);
+					$("#sv-submbtn").click(_submit);
+					$("#sv-addbtn").click(_addicon);
+
+					$("#sv-detail-back").click(_closeDetail);
+					$("#sv-newicon-back").click(_hideNewIcon);
+					$("#sv-newicon-img").click(_uploadIcon);
+					$("#sv-newicon-submit").click(_sumbitNewIcon);
+
+					$("#sv-msgbox").click(_msg_hide);
+
+					// _openDetail();
+
+					var timer = null;
+					var _start = function () {
+						var e = this;
+						timer = setTimeout(function () {
+							_longpress(e);
+						}, 500);
+					};
+
+					var _stop = function () {
+						if (timer) {
+							clearTimeout(timer);
+						}
+					};
+
+					$(".sv-selebox:not(.sv-selebox-btn)").mousedown(_start);
+					$(".sv-selebox:not(.sv-selebox-btn)").on("touchstart", _start);
+
+					$(".sv-selebox:not(.sv-selebox-btn)").mouseup(_stop);
+					$(".sv-selebox:not(.sv-selebox-btn)").mouseout(_stop);
+					$(".sv-selebox:not(.sv-selebox-btn)").on("touchend", _stop);
+
+					return;
+				}
+
+				window.onload = function () {
+					_hideLoad();
+
+					$("#sv-cover").css("background", color_box.choose());
+					// $("#sv-detail").css("background", color_box.choose());
+					$("#sv-cover").click(_exitCover);
+
+					_updatePos();
+
+					_sync();
+
+					return;
+				};
+
+				window.onresize = _updatePos;
+				_updatePos();
+			})(jQuery);
+
+		</script>
+	</body>
+</html>
