@@ -493,6 +493,7 @@
 					$(".sv-selebox:not(.sv-selebox-btn)").mouseup(_stop);
 					$(".sv-selebox:not(.sv-selebox-btn)").mouseout(_stop);
 					$(".sv-selebox:not(.sv-selebox-btn)").on("touchend", _stop);
+					$(".sv-selebox:not(.sv-selebox-btn)").on("touchmove", _stop);
 
 					return;
 				}
