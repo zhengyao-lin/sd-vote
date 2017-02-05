@@ -11,7 +11,7 @@ var app = express();
 app.use("/static", express.static("static"));
 app.use("/upload", express.static("upload"));
 app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({ limit: 1024 * 512, extended: false }));
+app.use(bodyparser.urlencoded({ limit: 1024 * 1024 * 2, extended: false }));
 
 app.get("/vote", function (req, res) {
 	res.redirect("/static/cl.html");

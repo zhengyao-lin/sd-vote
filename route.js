@@ -142,7 +142,7 @@ function uploadFile(tmp, cb) {
 exports.regCand = function (req, res) {
 	util.log(req.ip + ": register attempt");
 	checkValidIP(req, res, "reg", errproc(res, function () {
-		var form = new multiparty.Form({ maxFilesSize: 1024 * 512 });
+		var form = new multiparty.Form({ maxFilesSize: 1024 * 1024 * 2 });
 
 		form.parse(req, function(err, fields, files) {
 			if (err) {
