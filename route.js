@@ -10,8 +10,14 @@ var db = new mongodb.Db("sdvote", server, { safe: true });
 
 db.open();
 
-function qerr(msg) {
-	return JSON.stringify({ suc: false, msg: msg });
+function qerr(msg, prompt) {
+	var tmp = { suc: false, msg: msg };
+
+	if (prompt != undefined) {
+		tmp.prompt = prompt;
+	}
+
+	return JSON.stringify(tmp);
 }
 
 function qsuc() {
@@ -80,9 +86,9 @@ function checkValidIP(req, res, action, cb) {
 
 			if (found && found[action]) {
 				res.send(qerr(
-					action == "poll" ? "不能投两次啊"
-									 : (action == "reg" ? "每人最多添加一个选项啊"
-									 					: "duplicated ip attempt on action " + action)));
+					"duplicated ip attempt on action " + action,
+					action == "poll" ? 0 : (action == "reg" ? 1 : undefined)
+				));
 				util.log("duplicated ip attempt on action " + action);
 				return;
 			}
@@ -140,7 +146,7 @@ exports.regCand = function (req, res) {
 
 		form.parse(req, function(err, fields, files) {
 			if (err) {
-				res.send(qerr("图太大了orz"));
+				res.send(qerr("internal error", 2));
 				util.log("internal error: " + err);
 				return;
 			}
@@ -210,7 +216,7 @@ exports.pollCand = function (req, res) {
 					(function (i) {
 						cand.findOne({ id: candstr[i] }, errproc(res, function (ret) {
 							if (!ret) {
-								res.send(qerr("no such candidate"));
+								res.send(qerr("no such candidate", 3));
 								return;
 							}
 

@@ -6,6 +6,7 @@
 		
 		<link rel="stylesheet" href="font/fontawesome/import.css" />
 		<link rel="stylesheet" href="font/alegreya/import.css" />
+		<link rel="stylesheet" href="font/chfont/import.css" />
 		<link rel="stylesheet" href="css/sv.css" />
 
 		<script src="js/jquery.js"></script>
@@ -260,6 +261,12 @@
 					_openDetail(e);
 				}
 
+				var _prompt = [
+					"不能投两次啊",
+					"每人最多添加一个选项额",
+					"图太大了orz"
+				];
+
 				function _submit() {
 					var i;
 					var selected = [];
@@ -305,7 +312,11 @@
 
 							setTimeout(function () {
 								if (!dat.suc) {
-									_msg(dat.msg);
+									if (dat.prompt != undefined) {
+										_msg(_prompt[dat.prompt]);
+									} else {
+										_msg(dat.msg);
+									}
 								} else {
 									_showThanks();
 								}
@@ -374,7 +385,11 @@
 							var dat = JSON.parse(data);
 
 							if (!dat.suc) {
-								_msg(dat.msg);
+								if (dat.prompt != undefined) {
+									_msg(_prompt[dat.prompt]);
+								} else {
+									_msg(dat.msg);
+								}
 								setTimeout(_hideLoad, 1000);
 								return;
 							}
