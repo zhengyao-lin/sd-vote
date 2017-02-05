@@ -102,6 +102,12 @@
 			</div>
 		</div>
 
+		<div id="sv-prompt" style="display: none;">
+			<span>图太大了orz</span>
+			<span>每人最多添加一个选项额</span>
+			<span>不能投两次啊</span>
+		</div>
+
 		<script>
 			Array.prototype.choose = function () {
 				return this[Math.floor(Math.random() * this.length)];
@@ -261,11 +267,13 @@
 					_openDetail(e);
 				}
 
-				var _prompt = [
-					"不能投两次啊",
-					"每人最多添加一个选项额",
-					"图太大了orz"
-				];
+				var _prompt = [];
+
+				var i, e = $("#sv-prompt").children("span");
+
+				for (i = 0; i < e.length; i++) {
+					_prompt[0] = $(e[i]).html();
+				}
 
 				function _submit() {
 					var i;
