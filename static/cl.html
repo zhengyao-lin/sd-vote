@@ -103,9 +103,7 @@
 		</div>
 
 		<div id="sv-prompt" style="display: none;">
-			<span>图太大了orz</span>
-			<span>每人最多添加一个选项额</span>
-			<span>不能投两次啊</span>
+			不能投两次啊每人最多添加一个选项额图太大了你还没有选呢最多选三个哦服务器炸了!额没有名字没有描述没有图片啊啊啊
 		</div>
 
 		<script>
@@ -267,13 +265,11 @@
 					_openDetail(e);
 				}
 
-				var _prompt = [];
-
-				var i, e = $("#sv-prompt").children("span");
-
-				for (i = 0; i < e.length; i++) {
-					_prompt[0] = $(e[i]).html();
-				}
+				var _prompt = [
+					"不能投两次啊",
+					"每人最多添加一个选项额",
+					"图太大了orz"
+				];
 
 				function _submit() {
 					var i;
@@ -360,7 +356,7 @@
 					var descr = $("#sv-newicon-descr").val();
 
 					if (!name || !name.length) {
-						_msg("额,没有名字");
+						_msg("额没有名字");
 						return;
 					}
 
