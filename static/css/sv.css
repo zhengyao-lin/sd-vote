@@ -318,6 +318,8 @@ body {
 	background: #2ECC71;
 	color: #EEEEEE;
 
+	border-radius: 0 2px 2px 0;
+
 	font-size: 2em;
 
 	cursor: pointer;
