@@ -7,6 +7,7 @@
 		<link rel="stylesheet" href="font/fontawesome/import.css" />
 		<link rel="stylesheet" href="font/alegreya/import.css" />
 		<link rel="stylesheet" href="font/chfont/import.css" />
+		<link rel="stylesheet" href="font/ubuntu/import.css" />
 		<link rel="stylesheet" href="css/sv.css" />
 
 		<script src="js/jquery.js"></script>
@@ -47,7 +48,22 @@
 							<div id="sv-addbtn" class="sv-addbtn">
 								<span id="sv-addsymb" class="fa fa-plus"></span>
 							</div>
+							<div id="sv-addbtn-tinyform" style="display: none; opacity: 0;">
+								<div id="sv-addbtn-inputbox" class="sv-addbtn-inputbox">
+									<input id="sv-addbtn-nameinput" class="sv-addbtn-nameinput" placeholder="name" /><br>
+									<textarea id="sv-addbtn-descrinput" class="sv-addbtn-descrinput" placeholder="description"></textarea>
+								</div>
+								<div id="sv-addbtn-submit">
+									<span id="sv-addbtn-submit-symb" class="fa fa-check sv-vcenter" style="pointer-events: none;"></span>
+								</div>
+							</div>
 						</div>
+
+						<!--div class="sv-selebox sv-selebox-btn">
+							<div id="sv-addbtn" class="sv-addbtn">
+								<span id="sv-addsymb" class="fa fa-plus"></span>
+							</div>
+						</div-->
 
 						<div class="sv-selebox sv-selebox-btn">
 							<div id="sv-submbtn" class="sv-submbtn">
@@ -71,31 +87,12 @@
 				<span class="fa fa-rocket fa-spin sv-vcenter" style="font-size: 5em; margin-bottom: 1em;"></span>
 			</div>
 
-			<div id="sv-newicon" style="">
-				<span id="sv-newicon-back" class="fa fa-arrow-left">
-					<span style="font-family: tekai; margin-left: 1em;">增加选项</span>
-				</span>
-				<span id="sv-newicon-submit" class="sv-newicon-submit">提交</span>
-				<form id="sv-newicon-form" action="/vote/reg" method="post"
-					  style="display: none;" enctype="multipart/form-data">
-					<input id="sv-newicon-form-photo" type="file" name="photo" />
-					<input id="sv-newicon-form-name" type="text" name="name" />
-					<input id="sv-newicon-form-descr" type="text" name="descr" />
-				</form>
-				<div id="sv-newicon-img" style="margin: 4em 0;">
-					<span class="fa fa-plus" style="font-size: 5em; cursor: pointer;">
-						<br><span style="font-size: 0.5em; font-family: tekai;">
-							假装有预览图
-						</span>
-					</span>
-				</div>
-				<div id="sv-newicon-descr-box">
-					<span style="font-size: 1em; font-family: tekai;">名字</span><br>
-					<input id="sv-newicon-name" class="sv-newivon-nameinput" /><br><br>
-					<span style="font-size: 1em; font-family: tekai;">简单介绍</span><br>
-					<textarea id="sv-newicon-descr" class="sv-newicon-descr"></textarea><br>
-				</div>
-			</div>
+			<form id="sv-newicon-form" action="/vote/reg" method="post"
+				  style="display: none;" enctype="multipart/form-data">
+				<input id="sv-newicon-form-photo" type="file" name="photo" />
+				<input id="sv-newicon-form-name" type="text" name="name" />
+				<input id="sv-newicon-form-descr" type="text" name="descr" />
+			</form>
 
 			<div id="sv-msgbox" style="top: -100%;">
 				<div id="sv-msg" class="sv-noselect sv-vcenter"></div>
@@ -135,14 +132,23 @@
 				}
 
 				function _showNewIcon() {
-					$("#sv-newicon").css("left", "0");
-					$("#sv-newicon").css("box-shadow", "0px 0 5px rgba(0, 0, 0, 0.7)");
+					$("#sv-addbtn-tinyform").css("display", "");
+					$("#sv-addbtn").css("opacity", "0");
+					setTimeout(function () {
+						$("#sv-addbtn-tinyform").css("opacity", "1");
+					}, 300);
+					// $("#sv-addbtn").css("display", "none");
+					_updatePos();
 					return;
 				}
 
 				function _hideNewIcon() {
-					$("#sv-newicon").css("left", "100%");
-					$("#sv-newicon").css("box-shadow", "");
+					$("#sv-addbtn-tinyform").css("opacity", "0");
+					$("#sv-addbtn").css("opacity", "1");
+					setTimeout(function () {
+						$("#sv-addbtn-tinyform").css("display", "none");
+						_updatePos();
+					}, 300);
 					return;
 				}
 
@@ -345,15 +351,16 @@
 
 				function _addicon() {
 					_showNewIcon();
+					_uploadIcon();
 				}
 
 				function _uploadIcon() {
 					$("#sv-newicon-form-photo").click();
 				}
 
-				function _sumbitNewIcon() {
-					var name = $("#sv-newicon-name").val();
-					var descr = $("#sv-newicon-descr").val();
+				function _submitNewIcon() {
+					var name = $("#sv-addbtn-nameinput").val();
+					var descr = $("#sv-addbtn-descrinput").val();
 
 					if (!name || !name.length) {
 						_msg("额没有名字");
@@ -373,47 +380,80 @@
 					$("#sv-newicon-form-name").val(name);
 					$("#sv-newicon-form-descr").val(descr);
 
-					// $("#sv-newicon-form").submit();
+					var _load_start = function () {
+						$("#sv-addbtn-inputbox").css("width", "0");
+						$("#sv-addbtn-submit").css("width", "100%");
+						$("#sv-addbtn-submit").css("left", "0");
 
-					var form = $("#sv-newicon-form")[0];
+						$("#sv-addbtn-submit-symb").addClass("fa-cog");
+						$("#sv-addbtn-submit-symb").addClass("fa-spin");
+						$("#sv-addbtn-submit-symb").removeClass("fa-check");
 
-					_showLoad();
+						$("#sv-addbtn-submit").unbind("click");
+					};
 
-					$.ajax({
-						url: "/vote/reg",
-						type: "POST",
-						data: new FormData(form),
-						processData: false,
-						contentType: false,
-						success: function (data) {
-							var dat = JSON.parse(data);
+					var _load_end = function () {
+						$("#sv-addbtn-inputbox").css("width", "80%");
+						$("#sv-addbtn-submit").css("width", "20%");
+						$("#sv-addbtn-submit").css("left", "80%");
 
-							if (!dat.suc) {
-								if (dat.prompt != undefined) {
-									_msg(_prompt[dat.prompt]);
-								} else {
-									_msg(dat.msg);
+						$("#sv-addbtn-submit-symb").removeClass("fa-cog");
+						$("#sv-addbtn-submit-symb").removeClass("fa-spin");
+						$("#sv-addbtn-submit-symb").addClass("fa-check");
+
+						$("#sv-addbtn-submit").click(_submitNewIcon);
+					};
+
+					_load_start();
+
+					setTimeout(function () {
+						var form = $("#sv-newicon-form")[0];
+
+						$.ajax({
+							url: "/vote/reg",
+							type: "POST",
+							data: new FormData(form),
+							processData: false,
+							contentType: false,
+							success: function (data) {
+								var dat = JSON.parse(data);
+
+								if (!dat.suc) {
+									if (dat.prompt != undefined) {
+										_msg(_prompt[dat.prompt]);
+									} else {
+										_msg(dat.msg);
+									}
+
+									setTimeout(function () {
+										_load_end();
+										_hideNewIcon();
+									}, 1000);
+
+									return;
 								}
-								setTimeout(_hideLoad, 1000);
-								return;
-							}
-
-							setTimeout(function () {
-								_showThanks();
-								setTimeout(_hideLoad, 1000);
 
 								setTimeout(function () {
-									window.location = window.location;
-								}, 2000);
-							}, 500);
-						},
+									_showThanks();
+									setTimeout(_load_end, 1000);
 
-						error: function () {
-							_msg("服务器炸了!");
-							setTimeout(_hideLoad, 500);
-							return;
-						}
-					});
+									setTimeout(function () {
+										window.location = window.location;
+									}, 2000);
+								}, 500);
+							},
+
+							error: function () {
+								_msg("服务器炸了!");
+								setTimeout(function () {
+									_load_end();
+									_hideNewIcon();
+								}, 1000);
+
+								return;
+							}
+						});
+					}, 1000);
 
 					return;
 				}
@@ -484,9 +524,12 @@
 					$("#sv-addbtn").click(_addicon);
 
 					$("#sv-detail-back").click(_closeDetail);
-					$("#sv-newicon-back").click(_hideNewIcon);
-					$("#sv-newicon-img").click(_uploadIcon);
-					$("#sv-newicon-submit").click(_sumbitNewIcon);
+					
+					// $("#sv-newicon-back").click(_hideNewIcon);
+					// $("#sv-newicon-img").click(_uploadIcon);
+					// $("#sv-newicon-submit").click(_submitNewIcon);
+					
+					$("#sv-addbtn-submit").click(_submitNewIcon);
 
 					$("#sv-msgbox").click(_msg_hide);
 
