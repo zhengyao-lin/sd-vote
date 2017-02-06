@@ -5,6 +5,10 @@ body {
 	background: #F8F8F8;
 }
 
+br {
+	font-family: Ubuntu;
+}
+
 .intro-headline {
 	width: 100%;
 	margin: 1em 0 0 0;

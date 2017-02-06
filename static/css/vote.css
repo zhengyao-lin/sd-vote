@@ -8,6 +8,10 @@ body {
 	-o-transition: opacity 0.3s;
 }
 
+br {
+	font-family: Ubuntu;
+}
+
 .sv-noselect {
 	-moz-user-select: none;
 	-webkit-user-select: none;
