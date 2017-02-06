@@ -6,7 +6,7 @@ mv `ls | grep -E -v "^(chfont)$"` ../../.tmp
 
 cd ../../
 
-font-spider static/cl.html
+font-spider static/*.html
 
 mv .tmp/* static/font/
 rm -r .tmp

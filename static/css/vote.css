@@ -1,6 +1,11 @@
 body {
 	margin: 0;
 	padding: 0;
+
+	transition: opacity 0.3s;
+	-moz-transition: opacity 0.3s;
+	-webkit-transition: opacity 0.3s;
+	-o-transition: opacity 0.3s;
 }
 
 .sv-noselect {
@@ -31,7 +36,7 @@ body {
 }
 
 #sv-cover {
-	z-index: 10;
+	z-index: 10001;
 	transition: left 1s cubic-bezier(0.19, 1, 0.22, 1);
 	-moz-transition: left 1s cubic-bezier(0.19, 1, 0.22, 1);
 	-webkit-transition: left 1s cubic-bezier(0.19, 1, 0.22, 1);
@@ -390,7 +395,7 @@ body {
 	background: #313131;
 	color: #E8E8E8;
 
-	padding: 1em 0;
+	padding: 0.7em 0;
 	margin-bottom: 1em;
 
 	font-size: 2em;
@@ -399,6 +404,31 @@ body {
 	box-shadow: 0px -5px 5px rgba(0, 0, 0, 0.5) inset;
 
 	text-align: center;
+}
+
+.sv-help-btn {
+	position: absolute;
+	display: block;
+
+	left: -1em;
+
+	margin-top: 1.4em;
+	width: 100%;
+	text-align: right;
+}
+
+#sv-help-btn {
+	position: relative;
+	cursor: pointer;
+}
+
+#sv-about-btn {
+	position: relative;
+
+	font-size: 1.5em;
+	font-weight: bold;
+
+	cursor: default;
 }
 
 #sv-shade {

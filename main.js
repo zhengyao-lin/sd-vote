@@ -14,7 +14,11 @@ app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ limit: 1024 * 1024 * 2, extended: false }));
 
 app.get("/vote", function (req, res) {
-	res.redirect("/static/cl.html");
+	res.redirect("/static/vote.html");
+});
+
+app.get("/intro", function (req, res) {
+	res.redirect("/static/intro.html");
 });
 
 app.post("/vote/reg", route.regCand);
