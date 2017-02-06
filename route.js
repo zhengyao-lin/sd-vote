@@ -260,8 +260,8 @@ exports.getCand = function (req, res) {
 exports.incView = function (req, res) {
 	util.log(req.ip + ": inc view");
 
-	var date = new Date();
-	var date = date.getMonth() + "-" + date.getDate();
+	var pdate = new Date();
+	var date = pdate.getMonth() + "-" + pdate.getDate();
 
 	db.collection("pview", { safe: true }, errproc(res, function (col) {
 		var tmp = { ip: req.ip, date: date };
@@ -270,6 +270,8 @@ exports.incView = function (req, res) {
 				res.send(qerr("viewed already"));
 				return;
 			}
+
+			tmp.prec = pdate.toString();
 
 			col.insert(tmp, errproc(res, function () {
 				res.send(qsuc());
