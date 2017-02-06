@@ -10,6 +10,8 @@
 		<link rel="stylesheet" href="font/chfont/import.css">
 		<link rel="stylesheet" href="font/ubuntu/import.css">
 		<link rel="stylesheet" href="css/intro.css">
+
+		<script src="js/jquery.js"></script>
 	</head>
 
 	<body>
@@ -21,6 +23,8 @@
 				}, 300);
 				return;
 			}
+
+			$.ajax({ url: "/vote/incview", type: "GET" });
 		</script>
 
 		<div class="fa fa-arrow-left intro-back" onclick="_jump('/vote')"></div>
