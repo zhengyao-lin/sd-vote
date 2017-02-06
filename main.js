@@ -21,6 +21,9 @@ app.post("/vote/reg", route.regCand);
 app.get("/vote/poll", route.pollCand);
 app.get("/vote/get", route.getCand);
 
+app.get("/vote/incview", route.incView);
+app.get("/vote/getview", route.getView);
+
 var server = app.listen(80, function () {
 	var host = server.address().address;
 	var port = server.address().port;

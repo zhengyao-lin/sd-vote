@@ -306,19 +306,14 @@ body {
 	font-family: Ubuntu;
 }
 
-#sv-addbtn-submit {
+#sv-addbtn-photo, #sv-addbtn-submit {
 	position: absolute;
 
 	width: 20%;
-	height: 100%;
 
 	left: 80%;
-	top: 0;
 
-	background: #2ECC71;
 	color: #EEEEEE;
-
-	border-radius: 0 2px 2px 0;
 
 	font-size: 2em;
 
@@ -329,8 +324,26 @@ body {
 	transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
+#sv-addbtn-submit {
+	height: 60%;
+	top: 0;
+	background: #2ECC71;
+	border-radius: 0 2px 0 0;
+}
+
+#sv-addbtn-photo {
+	height: 40%;
+	top: 60%;
+	background: #3498DB;
+	border-radius: 0 0 2px 0;
+}
+
 #sv-addbtn-submit:hover {
 	background: #31DC79;
+}
+
+#sv-addbtn-photo:hover {
+	background: #38A5EE;
 }
 
 .sv-selebox-checked-layer {
@@ -502,7 +515,7 @@ body {
 		padding: 5px;
 	}
 
-	#sv-addbtn-submit {
+	#sv-addbtn-photo, #sv-addbtn-submit {
 		font-size: 3em;
 	}
 

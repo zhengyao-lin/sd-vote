@@ -53,6 +53,9 @@
 									<input id="sv-addbtn-nameinput" class="sv-addbtn-nameinput" placeholder="name" /><br>
 									<textarea id="sv-addbtn-descrinput" class="sv-addbtn-descrinput" placeholder="description"></textarea>
 								</div>
+								<div id="sv-addbtn-photo">
+									<span id="sv-addbtn-photo-symb" class="fa fa-photo sv-vcenter" style="pointer-events: none;"></span>
+								</div>
 								<div id="sv-addbtn-submit">
 									<span id="sv-addbtn-submit-symb" class="fa fa-check sv-vcenter" style="pointer-events: none;"></span>
 								</div>
@@ -218,6 +221,8 @@
 				function _exitCover() {
 					$("#sv-cover").css("left", "-100%");
 
+					$.ajax({ url: "/vote/incview", type: "GET" });
+
 					return;
 				}
 
@@ -350,8 +355,8 @@
 				}
 
 				function _addicon() {
-					_showNewIcon();
 					_uploadIcon();
+					_showNewIcon();
 				}
 
 				function _uploadIcon() {
@@ -381,9 +386,12 @@
 					$("#sv-newicon-form-descr").val(descr);
 
 					var _load_start = function () {
+						/*
 						$("#sv-addbtn-inputbox").css("width", "0");
 						$("#sv-addbtn-submit").css("width", "100%");
 						$("#sv-addbtn-submit").css("left", "0");
+						$("#sv-addbtn-submit").css("height", "100%");
+						*/
 
 						$("#sv-addbtn-submit-symb").addClass("fa-cog");
 						$("#sv-addbtn-submit-symb").addClass("fa-spin");
@@ -393,9 +401,12 @@
 					};
 
 					var _load_end = function () {
+						/*
 						$("#sv-addbtn-inputbox").css("width", "80%");
 						$("#sv-addbtn-submit").css("width", "20%");
 						$("#sv-addbtn-submit").css("left", "80%");
+						$("#sv-addbtn-submit").css("height", "60%");
+						*/
 
 						$("#sv-addbtn-submit-symb").removeClass("fa-cog");
 						$("#sv-addbtn-submit-symb").removeClass("fa-spin");
@@ -530,6 +541,7 @@
 					// $("#sv-newicon-submit").click(_submitNewIcon);
 					
 					$("#sv-addbtn-submit").click(_submitNewIcon);
+					$("#sv-addbtn-photo").click(_uploadIcon);
 
 					$("#sv-msgbox").click(_msg_hide);
 

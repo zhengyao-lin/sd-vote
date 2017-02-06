@@ -256,3 +256,48 @@ exports.getCand = function (req, res) {
 		}));
 	}));
 };
+
+exports.incView = function (req, res) {
+	util.log(req.ip + ": inc view");
+
+	var date = new Date();
+	var date = date.getMonth() + "-" + date.getDate();
+
+	db.collection("pview", { safe: true }, errproc(res, function (col) {
+		var tmp = { ip: req.ip, date: date };
+		col.findOne(tmp, errproc(res, function (ret) {
+			if (ret) {
+				res.send(qerr("viewed already"));
+				return;
+			}
+
+			col.insert(tmp, errproc(res, function () {
+				res.send(qsuc());
+				return;
+			}));
+		}));
+	}));
+};
+
+exports.getView = function (req, res) {
+	util.log(req.ip + ": get view");
+
+	var tmp = {};
+
+	if (req.query.date) {
+		if (req.query.date.match(/^\d+-\d+$/g)) {
+			tmp.date = req.query.date;
+		} else {
+			res.send(qerr("wrong date format"));
+			util.log(req.ip + ": wrong date format " + req.query.date);
+			return;
+		}
+	}
+
+	db.collection("pview", { safe: true }, errproc(res, function (col) {
+		col.count(tmp, errproc(res, function (count) {
+			res.send(qjson(count));
+			return;
+		}));
+	}));
+};
