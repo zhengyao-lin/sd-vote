@@ -5,11 +5,11 @@
 		<meta http-equiv="Pragma" content="no-cache">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 		
-		<link rel="stylesheet" href="font/fontawesome/import.css" />
-		<link rel="stylesheet" href="font/alegreya/import.css" />
-		<link rel="stylesheet" href="font/chfont/import.css" />
-		<link rel="stylesheet" href="font/ubuntu/import.css" />
-		<link rel="stylesheet" href="css/vote.css" />
+		<link rel="stylesheet" href="font/fontawesome/import.css">
+		<link rel="stylesheet" href="font/alegreya/import.css">
+		<link rel="stylesheet" href="font/chfont/import.css">
+		<link rel="stylesheet" href="font/ubuntu/import.css">
+		<link rel="stylesheet" href="css/vote.css">
 
 		<script src="js/jquery.js"></script>
 	</head>
@@ -57,7 +57,7 @@
 							</div>
 							<div id="sv-addbtn-tinyform" style="display: none; opacity: 0;">
 								<div id="sv-addbtn-inputbox" class="sv-addbtn-inputbox">
-									<input id="sv-addbtn-nameinput" class="sv-addbtn-nameinput" placeholder="name" /><br>
+									<input id="sv-addbtn-nameinput" class="sv-addbtn-nameinput" placeholder="name"><br>
 									<textarea id="sv-addbtn-descrinput" class="sv-addbtn-descrinput" placeholder="description"></textarea>
 								</div>
 								<div id="sv-addbtn-photo">
@@ -99,9 +99,9 @@
 
 			<form id="sv-newicon-form" action="/vote/reg" method="post"
 				  style="display: none;" enctype="multipart/form-data">
-				<input id="sv-newicon-form-photo" type="file" name="photo" />
-				<input id="sv-newicon-form-name" type="text" name="name" />
-				<input id="sv-newicon-form-descr" type="text" name="descr" />
+				<input id="sv-newicon-form-photo" type="file" name="photo">
+				<input id="sv-newicon-form-name" type="text" name="name">
+				<input id="sv-newicon-form-descr" type="text" name="descr">
 			</form>
 
 			<div id="sv-msgbox" style="top: -100%;">
@@ -243,7 +243,7 @@
 				}
 
 				function _openAbout() {
-					_msg("星元<br><span style='font-size: 70%;'>一款专为中学生设计的货币<br><br><br><span class='fa fa-rocket' style='font-size: 150%; cursor: pointer;' onclick='_jump(\"/intro\")'></span><br><span style='font-size: 80%; font-family: Alegreya;'>more</span></span>", 0);
+					_msg("星元<br><span style='font-size: 70%;' onclick='_jump(\"/intro\")'>一款专为中学生设计的货币<br><br><span class='fa fa-rocket' style='font-size: 170%; cursor: pointer;'></span></span>", 0);
 					return;
 				}
 
