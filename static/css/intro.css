@@ -114,6 +114,10 @@ br {
 		left: 0;
 	}
 
+	.intro-passage {
+		margin: 1em 1em 0 1em;
+	}
+
 	body {
 		font-size: 10px;
 	}
