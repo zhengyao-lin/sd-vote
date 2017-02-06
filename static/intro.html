@@ -13,6 +13,17 @@
 	</head>
 
 	<body>
+		<script>
+			function _jump(url) {
+				document.body.style.opacity = "0";
+				setTimeout(function () {
+					window.location = url;
+				}, 300);
+				return;
+			}
+		</script>
+
+		<div class="fa fa-arrow-left intro-back" onclick="_jump('/vote')"></div>
 		<div class="intro-headline">什么是星元</div>
 		<div class="intro-subtitle-1">星元是一款能在杭外剑高使用的货币</div>
 		<div style="text-align: center; margin-top: 4em;">

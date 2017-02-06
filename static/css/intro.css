@@ -3,6 +3,11 @@ body {
 	margin: 2em;
 
 	background: #F8F8F8;
+
+	transition: opacity 0.3s;
+	-moz-transition: opacity 0.3s;
+	-webkit-transition: opacity 0.3s;
+	-o-transition: opacity 0.3s;
 }
 
 br {
@@ -63,6 +68,17 @@ br {
 
 	font-size: 1.5em;
 	font-family: mini-jiankai;
+}
+
+.intro-back {
+	z-index: 1000;
+	position: absolute;
+
+	top: 1em;
+	left: 1em;
+
+	font-size: 2em;
+	cursor: pointer;
 }
 
 @media screen and (min-width: 1201px) {

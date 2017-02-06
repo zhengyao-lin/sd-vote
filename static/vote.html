@@ -14,7 +14,7 @@
 		<script src="js/jquery.js"></script>
 	</head>
 
-	<body>
+	<body style="opacity: 0;">
 		<div id="sv-container">
 			<div id="sv-cover">
 				<div id="sv-qtitle" class="sv-noselect">
@@ -243,7 +243,7 @@
 				}
 
 				function _openAbout() {
-					_msg("星元<br><span style='font-size: 70%;' onclick='_jump(\"/intro\")'>一款专为中学生设计的货币<br><br><span class='fa fa-rocket' style='font-size: 170%; cursor: pointer;'></span></span>", 0);
+					_msg("<span style='font-size: 120%;'>星元</span><br><span style='font-size: 85%;' onclick='_jump(\"/intro\")'>一款专为中学生设计的货币<br><br><span class='fa fa-rocket' style='font-size: 170%; cursor: pointer;'></span></span>", 0);
 					return;
 				}
 
@@ -606,6 +606,8 @@
 				}
 
 				window.onload = function () {
+					$("body").css("opacity", 1);
+
 					_hideLoad();
 
 					_openHelp();
