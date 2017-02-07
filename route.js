@@ -72,41 +72,53 @@ function checkValidIP(req, res, action, cb) {
 		// return;
 	}
 
-	db.collection("votedip", function (err, voted) {
-		if (err) {
-			cb(err);
-			return;
-		}
-
-		voted.findOne({ ip: req.ip }, function (err, found) {
-			if (err) {
-				cb(err);
+	db.collection("pview", { safe: true }, errproc(res, function (col) {
+		var tmp = { ip: req.ip };
+		col.findOne(tmp, errproc(res, function (ret) {
+			if (!ret) {
+				res.send(qerr("illegal attempt"));
+				util.log("illegal attempt");
 				return;
 			}
 
-			if (found && found[action]) {
-				res.send(qerr(
-					"duplicated ip attempt on action " + action,
-					action == "poll" ? 0 : (action == "reg" ? 1 : undefined)
-				));
-				util.log("duplicated ip attempt on action " + action);
-				return;
-			}
-
-			var tmp = {};
-			tmp[action] = true;
-
-			voted.findOneAndUpdate({ ip: req.ip }, { $set: tmp },
-				{ new: true, upsert: true, returnOriginal: false }, function (err) {
+			db.collection("votedip", function (err, voted) {
 				if (err) {
 					cb(err);
 					return;
 				}
 
-				cb(null);
+				voted.findOne({ ip: req.ip }, function (err, found) {
+					if (err) {
+						cb(err);
+						return;
+					}
+
+					if (found && found[action]) {
+						res.send(qerr(
+							"duplicated ip attempt on action " + action,
+							action == "poll" ? 0 : (action == "reg" ? 1 : undefined)
+						));
+						util.log("duplicated ip attempt on action " + action);
+						return;
+					}
+
+					var tmp = {};
+					tmp[action] = true;
+					tmp[action + "_query"] = req.query;
+
+					voted.findOneAndUpdate({ ip: req.ip }, { $set: tmp },
+						{ new: true, upsert: true, returnOriginal: false }, function (err) {
+						if (err) {
+							cb(err);
+							return;
+						}
+
+						cb(null);
+					});
+				});
 			});
-		});
-	});
+		}));
+	}));
 }
 
 // candidate
@@ -204,6 +216,11 @@ exports.pollCand = function (req, res) {
 					tmp = parseInt(candstr[i]);
 					if (isNaN(tmp)) {
 						res.send(qerr("invalid candidate id"));
+						return;
+					}
+
+					if (candstr.indexOf(tmp) != -1) {
+						res.send(qerr("duplicated candidate id"));
 						return;
 					}
 
