@@ -117,7 +117,7 @@ br {
 
 	text-align: center;
 
-	padding-bottom: 7%;
+	padding-bottom: 5%;
 
 	cursor: default;
 }
@@ -184,7 +184,7 @@ br {
 .sv-img {
 	background-repeat: no-repeat;
 	background-size: cover;
-	background-position: 50% 20%;
+	background-position: 50% 40%;
 }
 
 .sv-thumb {
@@ -461,18 +461,24 @@ br {
 	font-size: 1.5em;
 	font-weight: bold;
 
-	cursor: default;
+	cursor: pointer;
 }
 
-#sv-shade {
-	position: absolute;
-
+#sv-zoomin-box {
 	z-index: 100;
+	position: relative;
 
-	height: 100%;
+	top: 0;
+	left: 0;
+
 	width: 100%;
+	height: 100%;
 
-	background: rgba(0, 0, 0, 0.5);
+	background: rgba(31, 31, 31, 0.8);
+
+	text-align: center;
+
+	cursor: zoom-out;
 
 	transition: opacity 0.3s;
 	-moz-transition: opacity 0.3s;
@@ -480,69 +486,28 @@ br {
 	-o-transition: opacity 0.3s;
 }
 
-.sv-detail-box {
-	position: absolute;
-
-	z-index: 100;
-
-	height: 100%;
-	width: 100%;
-
-	left: 100%;
-
-	overflow: auto;
-
-	background: #F4F4F4;
-
-	transition: left 1s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 1s;
-	-moz-transition: left 1s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 1s;
-	-webkit-transition: left 1s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 1s;
-	-o-transition: left 1s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 1s;
-}
-
-#sv-detail-cont {
+#sv-zoomin-cont {
 	position: relative;
 
+	left: 0;
 	width: 100%;
-	height: 90%;
-	top: 5%;
 }
 
-#sv-detail-back {
-	position: relative;
-	display: inline-block;
+#sv-zoomin-img {
+	max-width: 90%;
 
-	width: 50%;
+	border-radius: 3px;
 
-	padding: 4% 0 4% 4%;
-
-	color: #363636;
-
-	font-size: 2em;
-
-	cursor: pointer;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
 }
 
-#sv-detail-back {
-	width: 80%;
-}
+#sv-zoomin-descr {
+	margin-top: 1em;
 
-#sv-detail-back:hover {
-	color: #8B8B8B;
-}
+	color: #F5F5F5;
 
-#sv-detail-img {
-	width: 100%;
-	text-align: center;
-}
-
-#sv-detail-descr {
-	display: inline-block;
-
-	margin-left: 4%;
-	width: 70%;
-
-	font-family: Alegreya, sans-serif;
+	font-family: Ubuntu, milan;
+	font-size: 1.5em;
 }
 
 @media screen and (min-width: 1201px) {
@@ -592,10 +557,6 @@ br {
 
 	.sv-selebox-checked-layer {
 		font-size: 4em;
-	}
-
-	#sv-detail-img {
-		margin: 0;
 	}
 
 	body {

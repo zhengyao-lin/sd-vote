@@ -85,14 +85,12 @@
 						</div>
 					</div>
 				</div>
+			</div>
 
-				<div id="sv-shade" style="display: none; opacity: 0;"></div>
-
-				<div id="sv-detail" class="sv-detail-box">
-					<span id="sv-detail-back" class="fa fa-arrow-left">
-						<span id="sv-detail-descr"></span>
-					</span><br>
-					<img id="sv-detail-img-cont"><br>
+			<div id="sv-zoomin-box" style="display: none; opacity: 0;">
+				<div id="sv-zoomin-cont" class="sv-vcenter">
+					<img id="sv-zoomin-img" src="img/tmp1.jpg" /><br>
+					<div id="sv-zoomin-descr">Hello</div>
 				</div>
 			</div>
 
@@ -159,6 +157,38 @@
 					return;
 				}
 
+				function _showImage(url, descr)
+				{
+					if (descr.length > 24) {
+						descr = descr.substr(0, 24) + "...";
+					}
+
+					if (descr.length == 0) {
+						descr = "(no description)";
+					}
+
+					$("#sv-zoomin-box").css("display", "");
+					setTimeout(function () {
+						$("#sv-zoomin-box").css("opacity", "1");
+
+						$("#sv-zoomin-img").attr("src", url);
+						$("#sv-zoomin-descr").html(descr);
+
+						$("#sv-zoomin-img").css("max-height", $("#sv-zoomin-box").height() * 0.7 + "px");
+
+						_updatePos();
+					}, 300);
+
+					return;
+				}
+
+				function _hideImage() {
+					$("#sv-zoomin-box").css("opacity", "0");
+					setTimeout(function () {
+						$("#sv-zoomin-box").css("display", "none");
+					}, 300);
+				}
+
 				function _showNewIcon() {
 					$("#sv-addbtn-tinyform").css("display", "");
 					$("#sv-addbtn").css("opacity", "0");
@@ -203,42 +233,18 @@
 					return;
 				}
 
-				function _showShade() {
-					$("#sv-shade").css("display", "");
-					$("#sv-shade").css("opacity", "1");
-					return;
-				}
-
-				function _hideShade() {
-					$("#sv-shade").css("opacity", "0");
-					setTimeout(function () {
-						$("#sv-shade").css("display", "none");
-					}, 300);
-					return;
-				}
-
 				function _openDetail(e) {
 					var candid = parseInt($(e).find("#sv-tag-candid").html());
 
 					if (isNaN(candid)) return;
 
-					$("#sv-detail-img-cont").attr("src", "/upload/" + _allcand[candid].photo);
-					$("#sv-detail-descr").html(_allcand[candid].descr);
-
-					// $("#sv-detail").css("background", color_box.choose());
-					$("#sv-detail").css("left", "0");
-					$("#sv-detail").css("box-shadow", "0px 0 5px rgba(0, 0, 0, 0.7)");
-					// _showShade();
-
-					_updatePos();
+					_showImage("/upload/" + _allcand[candid].photo, _allcand[candid].descr);
 
 					return;
 				}
 
 				function _closeDetail() {
-					$("#sv-detail").css("left", "100%");
-					$("#sv-detail").css("box-shadow", "");
-					// _hideShade();
+					_hideImage();
 
 					return;
 				}
@@ -637,9 +643,9 @@
 					$(".sv-selebox:not(.sv-selebox-btn)").click(_check);
 					$("#sv-submbtn").click(_submit);
 					$("#sv-addbtn").click(_addicon);
-
-					$("#sv-detail-back").click(_closeDetail);
 					
+					$("#sv-zoomin-box").click(_hideImage);
+
 					// $("#sv-newicon-back").click(_hideNewIcon);
 					// $("#sv-newicon-img").click(_uploadIcon);
 					// $("#sv-newicon-submit").click(_submitNewIcon);
@@ -652,14 +658,12 @@
 
 					$("#sv-msgbox").click(_msg_hide);
 
-					// _openDetail();
-
 					var timer = null;
 					var _start = function () {
 						var e = this;
 						timer = setTimeout(function () {
 							_longpress(e);
-						}, 500);
+						}, 400);
 					};
 
 					var _stop = function () {
@@ -687,7 +691,6 @@
 					_openHelp();
 
 					$("#sv-cover").css("background", color_box.choose());
-					// $("#sv-detail").css("background", color_box.choose());
 					$("#sv-cover").click(_exitCover);
 
 					_updatePos();
