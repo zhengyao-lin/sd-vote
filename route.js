@@ -46,7 +46,7 @@ function checkValidIP(req, res, action, cb) { // cb(res, use_cap)
 
 	db.collection("config", { safe: true }, util.errproc(res, function (conf) {
 		conf.findOne({}, util.errproc(res, function (ret) {
-			var use_cap = ret.last ? ((cur_date - new Date(ret.last)) < 60000 /* 1 min */) : false;
+			var use_cap = ret.last ? ((cur_date - new Date(ret.last)) < 600000 /* 10 min */) : false;
 
 			conf.update({}, { $set: { last: cur_date.toString() } },
 				util.errproc(res, function () {
