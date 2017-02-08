@@ -162,6 +162,11 @@ br {
 
 	overflow: hidden;
 
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+
 	transition: box-shadow 0.5s;
 	-moz-transition: box-shadow 0.5s;
 	-webkit-transition: box-shadow 0.5s;
