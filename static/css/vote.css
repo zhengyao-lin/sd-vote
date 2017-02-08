@@ -157,7 +157,7 @@ br {
 .sv-img {
 	background-repeat: no-repeat;
 	background-size: cover;
-	background-position: center;
+	background-position: 50% 20%;
 }
 
 .sv-thumb {

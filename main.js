@@ -17,6 +17,10 @@ app.get("/vote", function (req, res) {
 	res.redirect("/static/vote.html");
 });
 
+app.get("/", function (req, res) {
+	res.redirect("/static/intro.html");
+});
+
 app.get("/intro", function (req, res) {
 	res.redirect("/static/intro.html");
 });

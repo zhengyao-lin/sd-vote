@@ -53,14 +53,14 @@ function getNewCandID(cb) {
 }
 
 function errproc(res, cb) {
-	return function (err, res) {
+	return function (err, ret) {
 		if (err) {
 			res.send(qerr("internal error"));
 			util.log("internal error: " + err);
 			return;
 		}
 
-		cb(res);
+		cb(ret);
 		return;
 	};
 }
@@ -75,7 +75,7 @@ function checkValidIP(req, res, action, cb) {
 	db.collection("pview", { safe: true }, errproc(res, function (col) {
 		var tmp = { ip: req.ip };
 		col.findOne(tmp, errproc(res, function (ret) {
-			if (!ret) {
+			if (!ret || (ret.prec && (new Date()) - (new Date(ret.prec))) < 8000) {
 				res.send(qerr("illegal attempt"));
 				util.log("illegal attempt");
 				return;
