@@ -13,7 +13,8 @@
 		"express": "*",
 		"body-parser": "*",
 		"multiparty": "*",
-		"mongodb": "*"
+		"mongodb": "*",
+		"geetest": "*"
 	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
