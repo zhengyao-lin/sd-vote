@@ -14,6 +14,7 @@
 		<link rel="stylesheet" href="css/vote.css">
 
 		<script src="js/jquery.js"></script>
+		<script src="http://static.geetest.com/static/tools/gt.js"></script>
 	</head>
 
 	<body style="opacity: 0;">
@@ -109,12 +110,17 @@
 			<div id="sv-msgbox" style="top: -100%;">
 				<div id="sv-msg" class="sv-noselect sv-vcenter"></div>
 			</div>
+
+			<div id="sv-captcha-box" style="top: -100%;">
+				<div id="sv-captcha" class="sv-noselect"></div>
+			</div>
 		</div>
 
 		<div id="sv-prompt" style="display: none; font-family: tekai, mini-jiankai;">
 			不能投两次啊每人最多添加一个选项额图太大了你还没有选呢最多选三个哦服务器炸了!额没有名字没有描述没有图片啊啊啊谢谢
 			长按选项查看大图点击大勾勾帮助点击选项可选择长按可查看大图点击最后的大勾勾提交点击加号可增加选项
 			星元是一款专为中学生设计的货币更多介绍
+			由于怀疑可怜的候选人猫猫有被强行拉票的嫌疑。为了公平起见其票数进行了适当的缩减
 		</div>
 
 		<script>
@@ -273,7 +279,10 @@
 
 					_msg_show = true;
 
-					$("#sv-msg").html(msg);
+					if (msg) {
+						$("#sv-msg").html(msg);
+					}
+
 					$("#sv-msgbox").css("top", "0");
 					$("#sv-msgbox").css("background", color || color_box.choose());
 
@@ -286,6 +295,14 @@
 					return;
 				}
 
+				function _showCaptcha() {
+					$("#sv-captcha-box").css("top", "0");
+				}
+
+				function _hideCaptcha() {
+					$("#sv-captcha-box").css("top", "-100%");
+				}
+
 				function _check() {
 					$(this).toggleClass("sv-selebox-checked");
 					var candid = parseInt($(this).find("#sv-tag-candid").html());
@@ -296,6 +313,57 @@
 					}
 
 					_allcand[candid].checked = $(this).hasClass("sv-selebox-checked");
+
+					return;
+				}
+
+				function _captchaValidate(dat, cb)
+				{
+					var data = JSON.parse(dat);
+
+					if (!data.suc) {
+						cb(dat);
+						return;
+					}
+
+					if (data.dat == false) {
+						// no captcha
+						cb(dat);
+						return;
+					}
+
+					dat = data.dat;
+
+					initGeetest({
+						gt: dat.gt,
+						challenge: dat.challenge,
+						product: "popup"
+					}, function (captcha) {
+						captcha.onSuccess(function () {
+							var query = captcha.getValidate();
+
+							$("#sv-captcha").html("");
+							_hideCaptcha(captcha);
+
+							$.ajax({
+								url: "/valid",
+								type: "GET",
+								data: {
+									ochallenge: dat.challenge,
+									challenge: query.geetest_challenge,
+									validate: query.geetest_validate,
+									seccode: query.geetest_seccode
+								},
+								success: function (dat) {
+									cb(dat);
+								}
+							});
+						});
+
+						captcha.appendTo("#sv-captcha");
+						// captcha.zoom("70%");
+						_showCaptcha(captcha);
+					});
 
 					return;
 				}
@@ -339,7 +407,7 @@
 						$("#sv-submsymb").addClass("fa-check");
 						$("#sv-submsymb").removeClass("fa-cog");
 						$("#sv-submsymb").removeClass("fa-spin");
-					}
+					};
 
 					_show();
 
@@ -351,27 +419,29 @@
 						},
 
 						success: function (dat) {
-							var dat = JSON.parse(dat);
+							_captchaValidate(dat, function (dat) {
+								var dat = JSON.parse(dat);
 
-							setTimeout(function () {
-								if (!dat.suc) {
-									if (dat.prompt != undefined) {
-										_msg(_prompt[dat.prompt]);
+								setTimeout(function () {
+									if (!dat.suc) {
+										if (dat.prompt != undefined) {
+											_msg(_prompt[dat.prompt]);
+										} else {
+											_msg(dat.msg);
+										}
 									} else {
-										_msg(dat.msg);
+										_showThanks();
+
+										setTimeout(function () {
+											_jump(window.location);
+										}, 2000);
 									}
-								} else {
-									_showThanks();
 
-									setTimeout(function () {
-										_jump(window.location);
-									}, 2000);
-								}
+									_hide();
+								}, 500);
 
-								_hide();
-							}, 500);
-
-							return;
+								return;
+							});
 						},
 
 						error: function () {
@@ -458,32 +528,34 @@
 							data: new FormData(form),
 							processData: false,
 							contentType: false,
-							success: function (data) {
-								var dat = JSON.parse(data);
+							success: function (dat) {
+								_captchaValidate(dat, function (dat) {
+									var dat = JSON.parse(dat);
 
-								if (!dat.suc) {
-									if (dat.prompt != undefined) {
-										_msg(_prompt[dat.prompt]);
-									} else {
-										_msg(dat.msg);
+									if (!dat.suc) {
+										if (dat.prompt != undefined) {
+											_msg(_prompt[dat.prompt]);
+										} else {
+											_msg(dat.msg);
+										}
+
+										setTimeout(function () {
+											_load_end();
+											_hideNewIcon();
+										}, 1000);
+
+										return;
 									}
 
 									setTimeout(function () {
-										_load_end();
-										_hideNewIcon();
-									}, 1000);
+										_showThanks();
+										setTimeout(_load_end, 1000);
 
-									return;
-								}
-
-								setTimeout(function () {
-									_showThanks();
-									setTimeout(_load_end, 1000);
-
-									setTimeout(function () {
-										_jump(window.location);
-									}, 2000);
-								}, 500);
+										setTimeout(function () {
+											_jump(window.location);
+										}, 2000);
+									}, 500);
+								});
 							},
 
 							error: function () {

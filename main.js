@@ -25,6 +25,8 @@ app.get("/intro", function (req, res) {
 	res.redirect("/static/intro.html");
 });
 
+app.get("/valid", route.validate);
+
 app.post("/vote/reg", route.regCand);
 app.get("/vote/poll", route.pollCand);
 app.get("/vote/get", route.getCand);
