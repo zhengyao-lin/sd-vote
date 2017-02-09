@@ -75,6 +75,7 @@ function checkValidIP(req, res, action, cb) { // cb(res, use_cap)
 										if (!err) {
 											if (info.country == "美国") {
 												res.send(qerr("is maomi speaking?"));
+												util.log("caught a maomi " + req.ip);
 												return;
 											}
 										}
