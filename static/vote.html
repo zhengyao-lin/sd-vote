@@ -91,8 +91,10 @@
 			<div id="sv-zoomin-box" style="display: none; opacity: 0;">
 				<div id="sv-zoomin-cont" class="sv-vcenter">
 					<img id="sv-zoomin-img" src="img/tmp1.jpg" /><br>
-					<div id="sv-zoomin-descr">Hello</div>
+					<div id="sv-zoomin-descr" class="sv-noselect">Hello</div>
 				</div>
+				<!-- prevent user from selecting the picture before it's really shown -->
+				<div id="sv-zoomin-alayer"></div>
 			</div>
 
 			<div id="sv-load">
@@ -106,7 +108,7 @@
 				<input id="sv-newicon-form-descr" type="text" name="descr">
 			</form>
 
-			<div id="sv-msgbox" style="top: -100%;">
+			<div id="sv-msgbox" class="sv-noselect" style="top: -100%;">
 				<div id="sv-msg" class="sv-noselect sv-vcenter"></div>
 			</div>
 
@@ -177,12 +179,16 @@
 
 					setTimeout(function () {
 						$("#sv-zoomin-box").css("opacity", "1");
+						setTimeout(function () {
+							$("#sv-zoomin-alayer").css("display", "none");
+						}, 300);
 					}, 300);
 
 					return;
 				}
 
 				function _hideImage() {
+					$("#sv-zoomin-alayer").css("display", "");
 					$("#sv-zoomin-box").css("opacity", "0");
 					setTimeout(function () {
 						$("#sv-zoomin-box").css("display", "none");
@@ -639,6 +645,7 @@
 							'</div> \
 							<div class="sv-selebox-checked-layer"><span class="fa fa-check sv-selebox-check sv-vcenter"></span></div> \
 							<div id="sv-tag-candid" style="display: none;">' + i + '</div> \
+							<div class="sv-selebox-alayer"></div> \
 						</div>';
 
 						// TODO: !!inject
@@ -672,7 +679,7 @@
 
 					var timer = null;
 					var _start = function () {
-						var e = this;
+						var e = $(this).parent();
 						timer = setTimeout(function () {
 							_longpress(e);
 						}, 300);
@@ -684,13 +691,13 @@
 						}
 					};
 
-					$(".sv-selebox:not(.sv-selebox-btn)").mousedown(_start);
-					$(".sv-selebox:not(.sv-selebox-btn)").on("touchstart", _start);
+					$(".sv-selebox-alayer").mousedown(_start);
+					$(".sv-selebox-alayer").on("touchstart", _start);
 
-					$(".sv-selebox:not(.sv-selebox-btn)").mouseup(_stop);
-					$(".sv-selebox:not(.sv-selebox-btn)").mouseout(_stop);
-					$(".sv-selebox:not(.sv-selebox-btn)").on("touchend", _stop);
-					$(".sv-selebox:not(.sv-selebox-btn)").on("touchmove", _stop);
+					$(".sv-selebox-alayer").mouseup(_stop);
+					$(".sv-selebox-alayer").mouseout(_stop);
+					$(".sv-selebox-alayer").on("touchend", _stop);
+					$(".sv-selebox-alayer").on("touchmove", _stop);
 
 					return;
 				}
