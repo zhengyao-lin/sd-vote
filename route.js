@@ -5,6 +5,7 @@ var fs = require("fs");
 
 var util = require("./util.js");
 var captcha = require("./captcha.js");
+var iploc = require("./iploc.js");
 
 var server = new mongodb.Server("localhost", 27017, { auto_reconnect: true });
 var db = new mongodb.Db("sdvote", server, { safe: true });
@@ -70,23 +71,32 @@ function checkValidIP(req, res, action, cb) { // cb(res, use_cap)
 										return;
 									}
 
-									var tmp = function (res, use_cap) {
-										var tmp = {};
-										tmp[action] = true;
-										tmp[action + "_query"] = req.query;
-										tmp[action + "_date"] = cur_date;
+									iploc.getIPInfo(req.ip, function (err, info) {
+										if (!err) {
+											if (info.country == "美国") {
+												res.send(qerr("is maomi speaking?"));
+												return;
+											}
+										}
 
-										voted.findOneAndUpdate({ ip: req.ip }, { $set: tmp },
-											{ new: true, upsert: true, returnOriginal: false }, util.errproc(res, function () {
-											cb(res, use_cap);
-										}));
-									};
+										var tmp = function (res, use_cap) {
+											var tmp = {};
+											tmp[action] = true;
+											tmp[action + "_query"] = req.query;
+											tmp[action + "_date"] = cur_date;
 
-									if (use_cap) {
-										captcha.challenge(req, res, db, tmp);
-									} else {
-										tmp(res, false);
-									}
+											voted.findOneAndUpdate({ ip: req.ip }, { $set: tmp },
+												{ new: true, upsert: true, returnOriginal: false }, util.errproc(res, function () {
+												cb(res, use_cap);
+											}));
+										};
+
+										if (use_cap) {
+											captcha.challenge(req, res, db, tmp);
+										} else {
+											tmp(res, false);
+										}
+									});
 								}));
 							}));
 						}));
