@@ -61,6 +61,7 @@
 							<div id="sv-addbtn-tinyform" style="display: none; opacity: 0;">
 								<div id="sv-addbtn-inputbox" class="sv-addbtn-inputbox">
 									<input id="sv-addbtn-nameinput" class="sv-addbtn-nameinput" placeholder="name"><br>
+									<div class="sv-split"></div><br>
 									<textarea id="sv-addbtn-descrinput" class="sv-addbtn-descrinput" placeholder="description"></textarea>
 								</div>
 								<div id="sv-addbtn-photo">
@@ -118,7 +119,7 @@
 			不能投两次啊每人最多添加一个选项额图太大了你还没有选呢最多选三个哦服务器炸了!额没有名字没有描述没有图片啊啊啊谢谢
 			长按选项查看大图点击大勾勾帮助点击选项可选择长按可查看大图点击最后的大勾勾提交点击加号可增加选项
 			星元是一款专为中学生设计的货币更多介绍
-			提示请勿上传涉及反动，淫秽色情或版权问题的图片和文字
+			请勿上传涉及反动，淫秽色情或版权问题的图片或文字
 		</div>
 
 		<script>
@@ -168,15 +169,14 @@
 					}
 
 					$("#sv-zoomin-box").css("display", "");
+					$("#sv-zoomin-img").attr("src", url);
+					$("#sv-zoomin-descr").html(descr);
+					$("#sv-zoomin-img").css("max-height", $("#sv-zoomin-box").height() * 0.7 + "px");
+
+					_updatePos();
+
 					setTimeout(function () {
 						$("#sv-zoomin-box").css("opacity", "1");
-
-						$("#sv-zoomin-img").attr("src", url);
-						$("#sv-zoomin-descr").html(descr);
-
-						$("#sv-zoomin-img").css("max-height", $("#sv-zoomin-box").height() * 0.7 + "px");
-
-						_updatePos();
 					}, 300);
 
 					return;
@@ -190,13 +190,19 @@
 				}
 
 				function _showNewIcon() {
-					$("#sv-addbtn-tinyform").css("display", "");
-					$("#sv-addbtn").css("opacity", "0");
-					setTimeout(function () {
-						$("#sv-addbtn-tinyform").css("opacity", "1");
-					}, 300);
-					// $("#sv-addbtn").css("display", "none");
-					_updatePos();
+					_msg("<span style='font-size: 120%;'>请勿</span><br><span style='font-size: 70%;'>上传涉及反动，淫秽色情或版权问题的图片或文字</span>", 0, null, function () {
+							$("#sv-addbtn-tinyform").css("display", "");
+							$("#sv-addbtn").css("opacity", "0");
+
+							setTimeout(_uploadIcon, 600);
+
+							setTimeout(function () {
+								$("#sv-addbtn-tinyform").css("opacity", "1");
+							}, 300);
+
+							_updatePos();
+						});
+
 					return;
 				}
 
@@ -261,8 +267,8 @@
 					return;
 				}
 
-				function _openHelp(cb) {
-					_msg("帮助<br><span style='font-family: mini-jiankai; font-size: 70%;'><br>点击选项可选择<br>长按可查看大图<br>点击加号可增加选项<br>点击最后的大勾勾提交</span>", 0, null, cb);
+				function _openHelp() {
+					_msg("帮助<br><span style='font-family: mini-jiankai; font-size: 70%;'><br>点击选项可选择<br>长按可查看大图<br>点击加号可增加选项<br>点击最后的大勾勾提交</span>", 0);
 					return;
 				}
 
@@ -471,12 +477,12 @@
 				}
 
 				function _addicon() {
-					_uploadIcon();
 					_showNewIcon();
 				}
 
 				function _uploadIcon() {
 					$("#sv-newicon-form-photo").click();
+					return;
 				}
 
 				function _submitNewIcon() {
@@ -627,8 +633,8 @@
 
 					for (i = 0; i < allcand.length; i++) {
 						var tmp =
-						'<div class="sv-selebox"> \
-							<div class="sv-thumb sv-img" style="background-image: url(\'/upload/' + allcand[i].photo + '\');"></div> \
+						'<div class="sv-selebox sv-noselect"> \
+							<div class="sv-thumb sv-img sv-noselect" style="background-image: url(\'/upload/' + allcand[i].photo + '\');"></div> \
 							<div class="sv-namecard">' +
 								(i < 3 ? "<span class='fa fa-star sv-namecard-star sv-namecard-star-" + (i + 1) + "'></span>" : "") + 
 								allcand[i].name + ' (' + allcand[i].poll + (allcand[i].poll > 1 ? " votes, " : " vote, ") + (sum ? truncdig(allcand[i].poll / sum * 100, 2) : "0") + '%)' +
@@ -662,7 +668,7 @@
 					$("#sv-addbtn-photo").click(_uploadIcon);
 
 					$("#sv-about-btn").click(_openAbout);
-					$("#sv-help-btn").click(function () { _openHelp(); });
+					$("#sv-help-btn").click(_openHelp);
 
 					$("#sv-msgbox").click(_msg_hide);
 
@@ -671,7 +677,7 @@
 						var e = this;
 						timer = setTimeout(function () {
 							_longpress(e);
-						}, 400);
+						}, 300);
 					};
 
 					var _stop = function () {
@@ -696,9 +702,7 @@
 
 					_hideLoad();
 
-					_openHelp(function () {
-						_msg("提示<br><span style='font-family: mini-jiankai; font-size: 70%;'><br>请勿上传涉及反动，淫秽色情或版权问题的图片和文字</span>", 0);
-					});
+					_openHelp();
 
 					$("#sv-cover").css("background", color_box.choose());
 					$("#sv-cover").click(_exitCover);

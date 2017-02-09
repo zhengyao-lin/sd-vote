@@ -63,9 +63,12 @@ br {
 }
 
 #sv-msg {
+	display: inline-block;
+
 	font-size: 3em;
 	padding-bottom: 1em;
 	font-family: Ubuntu, tekai;
+	max-width: 80%;
 }
 
 #sv-cover {
@@ -161,11 +164,6 @@ br {
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07);
 
 	overflow: hidden;
-
-	user-select: none;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-o-user-select: none;
 
 	transition: box-shadow 0.5s;
 	-moz-transition: box-shadow 0.5s;
@@ -315,9 +313,6 @@ br {
 	height: 30%;
 
 	border: none;
-	border: 2px solid #B2B2B2;
-	border-width: 0 0 2px 0;
-
 	outline: none;
 
 	padding-bottom: 3%;
@@ -329,13 +324,25 @@ br {
 	font-family: Ubuntu;
 }
 
+.sv-split {
+	position: relative;
+	display: inline-block;
+
+	height: 2px;
+	width: 80%;
+
+	left: 10%;
+
+	background: #B2B2B2;
+}
+
 .sv-addbtn-descrinput {
 	position: relative;
 
-	top: 16%;
+	top: 4%;
 	left: 10%;
 
-	height: 46%;
+	height: 42%;
 	width: 80%;
 
 	border: none;

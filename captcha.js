@@ -11,7 +11,7 @@ var cbs = {};
 exports.challenge = function (req, res, db, cb) {
 	cap.register(function (err, data) {
 		if (err || !data.success) {
-			res.send(util.qerr("failed to get captcha"));
+			res.send(util.qerr("failed to get captcha, please retry"));
 			return;
 		}
 
