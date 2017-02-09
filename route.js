@@ -51,33 +51,33 @@ function checkValidIP(req, res, action, cb) { // cb(res, use_cap)
 
 			conf.update({}, { $set: { last: cur_date.toString() } },
 				util.errproc(res, function () {
-					db.collection("pview", { safe: true }, util.errproc(res, function (col) {
-						var tmp = { ip: req.ip };
-						col.findOne(tmp, util.errproc(res, function (ret) {
-							if (!ret || (ret.prec && (new Date()) - (new Date(ret.prec))) < 8000) {
-								res.send(util.qerr("illegal attempt"));
-								util.log("illegal attempt");
+					iploc.getIPInfo(req.ip, function (err, info) {
+						if (!err) {
+							if (info.country == "美国") {
+								res.send(qerr("is maomi speaking?"));
+								util.log("caught a maomi " + req.ip);
 								return;
 							}
+						}
+						
+						db.collection("pview", { safe: true }, util.errproc(res, function (col) {
+							var tmp = { ip: req.ip };
+							col.findOne(tmp, util.errproc(res, function (ret) {
+								if (!ret || (ret.prec && (new Date()) - (new Date(ret.prec))) < 8000) {
+									res.send(util.qerr("illegal attempt"));
+									util.log("illegal attempt");
+									return;
+								}
 
-							db.collection("votedip", util.errproc(res, function (voted) {
-								voted.findOne({ ip: req.ip }, util.errproc(res, function (found) {
-									if (found && found[action]) {
-										res.send(util.qerr(
-											"duplicated ip attempt on action " + action,
-											action == "poll" ? 0 : (action == "reg" ? 1 : undefined)
-										));
-										util.log("duplicated ip attempt on action " + action);
-										return;
-									}
-
-									iploc.getIPInfo(req.ip, function (err, info) {
-										if (!err) {
-											if (info.country == "美国") {
-												res.send(qerr("is maomi speaking?"));
-												util.log("caught a maomi " + req.ip);
-												return;
-											}
+								db.collection("votedip", util.errproc(res, function (voted) {
+									voted.findOne({ ip: req.ip }, util.errproc(res, function (found) {
+										if (found && found[action]) {
+											res.send(util.qerr(
+												"duplicated ip attempt on action " + action,
+												action == "poll" ? 0 : (action == "reg" ? 1 : undefined)
+											));
+											util.log("duplicated ip attempt on action " + action);
+											return;
 										}
 
 										var tmp = function (res, use_cap) {
@@ -97,11 +97,11 @@ function checkValidIP(req, res, action, cb) { // cb(res, use_cap)
 										} else {
 											tmp(res, false);
 										}
-									});
+									}));
 								}));
 							}));
 						}));
-					}));
+					});
 				}));
 		}));
 	}));
