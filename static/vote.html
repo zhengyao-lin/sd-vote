@@ -118,7 +118,7 @@
 			不能投两次啊每人最多添加一个选项额图太大了你还没有选呢最多选三个哦服务器炸了!额没有名字没有描述没有图片啊啊啊谢谢
 			长按选项查看大图点击大勾勾帮助点击选项可选择长按可查看大图点击最后的大勾勾提交点击加号可增加选项
 			星元是一款专为中学生设计的货币更多介绍
-			由于怀疑可怜的候选人猫猫有被强行拉票的嫌疑。为了公平起见其票数进行了适当的缩减
+			提示请勿上传涉及反动，淫秽色情或版权问题的图片和文字
 		</div>
 
 		<script>
@@ -261,26 +261,32 @@
 					return;
 				}
 
-				function _openHelp() {
-					_msg("帮助<br><span style='font-family: mini-jiankai; font-size: 70%;'><br>点击选项可选择<br>长按可查看大图<br>点击加号可增加选项<br>点击最后的大勾勾提交</span>", 0);
+				function _openHelp(cb) {
+					_msg("帮助<br><span style='font-family: mini-jiankai; font-size: 70%;'><br>点击选项可选择<br>长按可查看大图<br>点击加号可增加选项<br>点击最后的大勾勾提交</span>", 0, null, cb);
 					return;
 				}
 
 				var _msg_show = false;
 				var _msg_hide_proc = null;
+				var _msg_cb = null;
 				var _msg_hide = function () {
 					if (_msg_show) {
 						_msg_show = false;
+
 						if (_msg_hide_proc) {
 							clearTimeout(_msg_hide_proc);
 							_msg_hide_proc = null;
 						}
 
 						$("#sv-msgbox").css("top", "-100%");
+
+						if (_msg_cb) {
+							setTimeout(_msg_cb, 1000);
+						}
 					}
 				};
 
-				function _msg(msg, timeout, color) {
+				function _msg(msg, timeout, color, cb) {
 					// alert(msg);
 
 					_msg_show = true;
@@ -293,6 +299,8 @@
 					$("#sv-msgbox").css("background", color || color_box.choose());
 
 					_updatePos();
+
+					_msg_cb = cb;
 
 					if (timeout != 0) {
 						_msg_hide_proc = setTimeout(_msg_hide, timeout || 3000);
@@ -654,7 +662,7 @@
 					$("#sv-addbtn-photo").click(_uploadIcon);
 
 					$("#sv-about-btn").click(_openAbout);
-					$("#sv-help-btn").click(_openHelp);
+					$("#sv-help-btn").click(function () { _openHelp(); });
 
 					$("#sv-msgbox").click(_msg_hide);
 
@@ -688,7 +696,9 @@
 
 					_hideLoad();
 
-					_openHelp();
+					_openHelp(function () {
+						_msg("提示<br><span style='font-family: mini-jiankai; font-size: 70%;'><br>请勿上传涉及反动，淫秽色情或版权问题的图片和文字</span>", 0);
+					});
 
 					$("#sv-cover").css("background", color_box.choose());
 					$("#sv-cover").click(_exitCover);
