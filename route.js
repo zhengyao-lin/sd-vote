@@ -52,7 +52,7 @@ function checkValidIP(req, res, action, cb) { // cb(res, use_cap)
 			conf.update({}, { $set: { last: cur_date.toString() } },
 				util.errproc(res, function () {
 					iploc.getIPInfo(req.ip, function (err, info) {
-						if (!err && info.country == "美国") {
+						if (err == null && info.country == "美国") {
 							res.send(qerr("is maomi speaking?"));
 							util.log("caught a maomi " + req.ip);
 							return;
