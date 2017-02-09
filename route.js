@@ -52,14 +52,12 @@ function checkValidIP(req, res, action, cb) { // cb(res, use_cap)
 			conf.update({}, { $set: { last: cur_date.toString() } },
 				util.errproc(res, function () {
 					iploc.getIPInfo(req.ip, function (err, info) {
-						if (!err) {
-							if (info.country == "美国") {
-								res.send(qerr("is maomi speaking?"));
-								util.log("caught a maomi " + req.ip);
-								return;
-							}
-						}
-						
+						if (!err && info.country == "美国") {
+							res.send(qerr("is maomi speaking?"));
+							util.log("caught a maomi " + req.ip);
+							return;
+						} else util.log("ip loc err: " + err);
+
 						db.collection("pview", { safe: true }, util.errproc(res, function (col) {
 							var tmp = { ip: req.ip };
 							col.findOne(tmp, util.errproc(res, function (ret) {
