@@ -26,7 +26,7 @@
 				return;
 			}
 
-			$.ajax({ url: "/vote/incview", type: "GET" });
+			$.ajax({ url: "/vote/incview", type: "GET", data: { from: "intro" } });
 		</script>
 
 		<div class="fa fa-paper-plane intro-back" onclick="_jump('/vote')"></div>

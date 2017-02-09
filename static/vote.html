@@ -261,7 +261,7 @@
 				}
 
 				function _exitCover() {
-					$.ajax({ url: "/vote/incview", type: "GET" });
+					$.ajax({ url: "/vote/incview", type: "GET", data: { from: "vote" } });
 					$("#sv-cover").css("left", "-100%");
 
 					return;

@@ -74,6 +74,7 @@ function checkValidIP(req, res, action, cb) { // cb(res, use_cap)
 										var tmp = {};
 										tmp[action] = true;
 										tmp[action + "_query"] = req.query;
+										tmp[action + "_date"] = cur_date;
 
 										voted.findOneAndUpdate({ ip: req.ip }, { $set: tmp },
 											{ new: true, upsert: true, returnOriginal: false }, util.errproc(res, function () {
@@ -234,6 +235,10 @@ exports.incView = function (req, res) {
 
 	db.collection("pview", { safe: true }, util.errproc(res, function (col) {
 		var tmp = { ip: req.ip, date: date };
+		if (req.query.from) {
+			tmp.from = req.query.from;
+		}
+
 		col.findOne(tmp, util.errproc(res, function (ret) {
 			if (ret) {
 				res.send(util.qerr("viewed already"));

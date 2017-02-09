@@ -67,3 +67,16 @@ db.cand.find().toArray().forEach(function (cand) {
 		db.cand.update({ id: cand.id }, { $inc: { poll: -res[cand.id] } });
 	}
 });
+
+var ret = [];
+db.votedip.find().toArray().forEach(function (e) {
+	var found = db.pview.find({ ip: e.ip }).toArray();
+
+	found.forEach(function (found) {
+		if (found && found.prec && (new Date(found.prec)) > (new Date("Thursday Feb 09 2017 0:00:00 GMT+0800 (CST)"))) {
+			found.query = e.poll_query; ret.push(found);
+		}
+	});
+});
+
+ret = ret.sort(function (a, b) { return (new Date(a.prec)) - (new Date(b.prec)); });
