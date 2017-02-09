@@ -51,7 +51,9 @@ function checkValidIP(req, res, action, cb) { // cb(res, use_cap)
 
 			conf.update({}, { $set: { last: cur_date.toString() } },
 				util.errproc(res, function () {
-					iploc.getIPInfo(req.ip, function (err, info) {
+					var ip4 = req.ip.split(":");
+					ip4 = ip4[ip4.length - 1];
+					iploc.getIPInfo(ip4, function (err, info) {
 						if (err == null) {
 							if (info.country == "美国") {
 								res.send(qerr("is maomi speaking?"));
