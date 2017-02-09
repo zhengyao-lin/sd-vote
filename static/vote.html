@@ -280,8 +280,40 @@
 					return;
 				}
 
-				var _joke_shown = false;
-				var _joke = [ "I wILl", "COmE foR YoU~~" ];
+				function _hasCookie(name) {
+					return document.cookie.indexOf(escape(name) + "=") != -1;
+				}
+
+				function _setCookie(name, value) {
+					if (_hasCookie(name)) {
+						var cookies = document.cookie.split(/\s*;\s*/g);
+						var i, reg = new RegExp(escape(name) + "=.*", "g");
+
+						for (i = 0; i < cookies.length; i++) {
+							if (cookies[i].match(reg)) {
+								cookies[i] = escape(name) + "=" + escape(value);
+								break;
+							}
+						}
+
+						document.cookie = cookies.join(";");
+					} else {
+						if (document.cookie != "")
+							document.cookie += ";"
+
+						document.cookie += escape(name) + "=" + escape(value);
+					}
+
+					return;
+				}
+
+				function _getCookie(name) {
+					var res = (new RegExp(escape(name) + "=(.*)", "g")).exec(document.cookie);
+					return res ? res[1] : undefined;
+				}
+
+				var _joke_shown = _getCookie("_joke_shown");
+				var _joke = [ "I wILl", "COmE foR YoU" ];
 
 				function _openAbout() {
 					var orig = $("#sv-about-btn").html();
@@ -297,6 +329,7 @@
 					}
 
 					_joke_shown = true;
+					_setCookie("_joke_shown", true);
 					var i;
 
 					_setGlitchTitle(orig);
