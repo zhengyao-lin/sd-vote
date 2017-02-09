@@ -1,10 +1,5 @@
 /* original author: Lucas Bebber on http://codepen.io/lbebber/pen/ypgql */
 
-.glitch {
-	color: white;
-	font-size: 100px;
-}
-
 @keyframes noise-anim {
 	0% { clip: rect(50px, 9999px, 82px, 0); }
 	5% { clip: rect(11px, 9999px, 46px, 0); }
@@ -32,7 +27,7 @@
 .glitch:after {
 	content: attr(data-text);
 	position: absolute;
-	left: 2px;
+	left: 0px;
 	text-shadow: -1px 0 red;
 	top: 0;
 	background: transparent;

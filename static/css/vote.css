@@ -451,13 +451,15 @@ br {
 	width: 100%;
 
 	background: #313131;
-	color: #E8E8E8;
+	color: #F3F3F3;
 
 	padding: 0.7em 0;
 	margin-bottom: 1em;
 
 	font-size: 2em;
 	font-family: Alegreya, sans-serif;
+
+	overflow: hidden;
 
 	box-shadow: 0px -5px 5px rgba(0, 0, 0, 0.5) inset;
 

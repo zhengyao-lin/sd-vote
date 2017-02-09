@@ -36,7 +36,7 @@
 							<span class="sv-vcenter sv-help-btn">
 								<span id="sv-help-btn" class="fa fa-question-circle"></span>
 							</span>
-							<span id="sv-about-btn" class="glitch" data-text="StarDollar">
+							<span id="sv-about-btn">
 								StarDollar
 							</span>
 						</div>
@@ -267,8 +267,48 @@
 					return;
 				}
 
+				function _setGlitchTitle(msg) {
+					$("#sv-about-btn").addClass("glitch");
+					$("#sv-about-btn").html(msg);
+					$("#sv-about-btn").attr("data-text", msg);
+					return;
+				}
+
+				function _restoreGlitchTitle(msg) {
+					$("#sv-about-btn").removeClass("glitch");
+					$("#sv-about-btn").html(msg);
+					return;
+				}
+
+				var _joke_shown = false;
+				var _joke = [ "I wILl", "COmE foR YoU~~" ];
+
 				function _openAbout() {
-					_msg("<span style='font-size: 120%;'>星元</span><br><span style='font-size: 85%;' onclick='_jump(\"/intro\")'>一款专为中学生设计的货币<br><br><span class='fa fa-rocket' style='font-size: 170%; cursor: pointer;'></span></span>", 0);
+					var orig = $("#sv-about-btn").html();
+					var _show = function () {
+						_msg("<span style='font-size: 120%;'>星元</span><br><span style='font-size: 85%;' onclick='_jump(\"/intro\")'>一款专为中学生设计的货币<br><br><span class='fa fa-rocket' style='font-size: 170%; cursor: pointer;'></span></span>", 0, null, function () {
+									_restoreGlitchTitle(orig);
+								});
+					};
+
+					if (_joke_shown) {
+						_show();
+						return;
+					}
+
+					_joke_shown = true;
+					var i;
+
+					_setGlitchTitle(orig);
+
+					for (i = 0; i < _joke.length; i++) {
+						setTimeout((function (j) { return function () {
+							_setGlitchTitle(j);
+						}})(_joke[i]), (i + 1) * 4000);
+					}
+
+					setTimeout(_show, (i + 1) * 4000);
+
 					return;
 				}
 
@@ -292,7 +332,7 @@
 						$("#sv-msgbox").css("top", "-100%");
 
 						if (_msg_cb) {
-							setTimeout(_msg_cb, 1000);
+							_msg_cb();
 						}
 					}
 				};
