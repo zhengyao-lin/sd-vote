@@ -1,6 +1,6 @@
 body {
 	padding: 0;
-	margin: 2em;
+	margin: 2em 2em 0 2em;
 
 	background: #F8F8F8;
 
@@ -83,6 +83,8 @@ br {
 
 .intro-img {
 	position: relative;
+
+	width: 100%;
 
 	left: -15px;
 	border: 15px solid #FFF;
