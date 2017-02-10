@@ -332,6 +332,8 @@
 					_setCookie("_joke_shown", true);
 					var i;
 
+					$("#sv-about-btn").unbind("click");
+
 					_setGlitchTitle(orig);
 
 					for (i = 0; i < _joke.length; i++) {
@@ -340,7 +342,10 @@
 						}})(_joke[i]), (i + 1) * 4000);
 					}
 
-					setTimeout(_show, (i + 1) * 4000);
+					setTimeout(function () {
+						_show();
+						$("#sv-about-btn").click(_openAbout);
+					}, (i + 1) * 4000);
 
 					return;
 				}
