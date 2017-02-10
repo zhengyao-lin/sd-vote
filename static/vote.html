@@ -32,11 +32,10 @@
 				<div id="sv-showcase" class="sv-noselect">
 					<div style="padding-bottom: 1em;">
 						<div id="sv-tip" style="font-family: Alegreya;">
-							<!--span>长按选项查看大图<br>点击大勾勾提交</span-->
 							<span class="sv-vcenter sv-help-btn">
 								<span id="sv-help-btn" class="fa fa-question-circle"></span>
 							</span>
-							<span id="sv-about-btn">
+							<span id="sv-about-btn" class="sv-vcenter">
 								StarDollar
 							</span>
 						</div>
@@ -109,8 +108,15 @@
 				<input id="sv-newicon-form-descr" type="text" name="descr">
 			</form>
 
-			<div id="sv-msgbox" class="sv-noselect" style="top: -100%;">
+			<div id="sv-msgbox" class="sv-noselect" style="top: -101%;">
 				<div id="sv-msg" class="sv-noselect sv-vcenter"></div>
+			</div>
+
+			<div id="sv-mmsgbox">
+				<div id="sv-mmsg">
+					<div id="sv-mmsg-cont" class="sv-vcenter">
+					</div>
+				</div>
 			</div>
 
 			<div id="sv-captcha-box" style="top: -100%;">
@@ -141,6 +147,7 @@
 
 			(function ($) {
 				var color_box = [ "#1ABC9C", "#2ECC71", "#3498DB", "#9B59B6", "#E67E22", "#E74C3C" ];
+				var color_box2 = [ "#16A085", "#27AE60", "#2980B9", "#8E44AD", "#D35400", "#C0392B" ];
 
 				function _setVCenter(pr, e) {
 					e.css("top", ((pr.height() - e.outerHeight(true)) / 2) + "px");
@@ -265,6 +272,10 @@
 					$.ajax({ url: "/vote/incview", type: "GET", data: { from: "vote" } });
 					$("#sv-cover").css("left", "-100%");
 
+					setTimeout(function () {
+						_mmsg("点击右上角问号查看帮助哦");
+					}, 1500);
+
 					return;
 				}
 
@@ -319,9 +330,14 @@
 				function _openAbout() {
 					var orig = $("#sv-about-btn").html();
 					var _show = function () {
-						_msg("<span style='font-size: 120%;'>星元</span><br><span style='font-size: 85%;' onclick='_jump(\"/intro\")'>一款专为中学生设计的货币<br><br><span class='fa fa-rocket' style='font-size: 170%; cursor: pointer;'></span></span>", 0, null, function () {
+						_msg("<span style='font-size: 120%;'>星元</span><br><span style='font-size: 85%;' onclick='_jump(\"/intro\")'>一款专为中学生设计的货币<br><br><span class='fa fa-rocket' style='font-size: 170%; cursor: pointer;'></span></span>", 0, "#313131", function () {
 									_restoreGlitchTitle(orig);
+									_mmsg_hide();
 								});
+
+						setTimeout(function () {
+							_mmsg("Project leader David M. Yang", 0, "#1C1C1C");
+						}, 300);
 					};
 
 					if (_joke_shown) {
@@ -368,10 +384,12 @@
 							_msg_hide_proc = null;
 						}
 
-						$("#sv-msgbox").css("top", "-100%");
+						$("#sv-msgbox").css("top", "-101%");
 
 						if (_msg_cb) {
-							_msg_cb();
+							var tmp = _msg_cb;
+							_msg_cb = null;
+							tmp();
 						}
 					}
 				};
@@ -399,6 +417,52 @@
 					return;
 				}
 
+				var _mmsg_show = false;
+				var _mmsg_hide_proc = null;
+				var _mmsg_cb = null;
+				var _mmsg_hide = function () {
+					if (_mmsg_show) {
+						$("#sv-mmsgbox").css("top", "-7em");
+						
+						if (_mmsg_hide_proc) {
+							clearTimeout(_mmsg_hide_proc);
+							_mmsg_hide_proc = null;
+						}
+
+						_mmsg_show = true;
+
+						if (_mmsg_cb) {
+							var tmp = _mmsg_cb;
+							_mmsg_cb = null;
+							tmp();
+						}
+					}
+				};
+
+				function _mmsg(msg, timeout, color, cb) {
+					if (_mmsg_show) {
+						_mmsg_show = false;
+						clearTimeout(_mmsg_hide_proc);
+						_mmsg_hide_proc = null;
+					}
+
+					$("#sv-mmsg-cont").html(msg);
+					$("#sv-mmsgbox").css("top", "0");
+					$("#sv-mmsg").css("background", color || color_box2.choose());
+
+					_updatePos();
+
+					_mmsg_show = true;
+
+					_mmsg_cb = cb;
+
+					if (timeout != 0) {
+						_mmsg_hide_proc = setTimeout(_mmsg_hide, timeout || 3000);
+					}
+
+					return;
+				}
+
 				function _showCaptcha() {
 					$("#sv-captcha-box").css("top", "0");
 				}
@@ -412,7 +476,7 @@
 					var candid = parseInt($(this).find("#sv-tag-candid").html());
 					
 					if (isNaN(candid)) {
-						_msg("that's... not a candidate");
+						_mmsg("that's... not a candidate");
 						return;
 					}
 
@@ -492,12 +556,12 @@
 					}
 
 					if (!selected.length) {
-						_msg("你还没有选呢");
+						_mmsg("你还没有选呢");
 						return;
 					}
 
 					if (selected.length > 3) {
-						_msg("最多选三个哦");
+						_mmsg("最多选三个哦");
 						return;
 					}
 
@@ -574,17 +638,17 @@
 					var descr = $("#sv-addbtn-descrinput").val();
 
 					if (!name || !name.length) {
-						_msg("额没有名字");
+						_mmsg("额没有名字");
 						return;
 					}
 
 					if (!descr || !descr.length) {
-						_msg("没有描述orz");
+						_mmsg("没有描述orz");
 						return;
 					}
 
 					if (!$("#sv-newicon-form-photo").val()) {
-						_msg("没有图片啊啊啊");
+						_mmsg("没有图片啊啊啊");
 						return;
 					}
 
@@ -761,6 +825,7 @@
 					$("#sv-help-btn").click(_openHelp);
 
 					$("#sv-msgbox").click(_msg_hide);
+					$("#sv-mmsg").click(_mmsg_hide);
 
 					var timer = null;
 					var _start = function () {
@@ -792,7 +857,7 @@
 
 					_hideLoad();
 
-					_openHelp();
+					// _openHelp();
 
 					$("#sv-cover").css("background", color_box.choose());
 					$("#sv-cover").click(_exitCover);
