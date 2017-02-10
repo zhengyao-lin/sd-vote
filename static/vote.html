@@ -123,6 +123,7 @@
 			长按选项查看大图点击大勾勾帮助点击选项可选择长按可查看大图点击最后的大勾勾提交点击加号可增加选项
 			星元是一款专为中学生设计的货币更多介绍
 			请勿上传涉及反动，淫秽色情或版权问题的图片或文字
+			哇服务器炸了
 		</div>
 
 		<script>
@@ -685,7 +686,12 @@
 
 				function _sync() {
 					var resp = $.ajax({ url: "/vote/get", type: "GET", async: false }).responseText;
-					var resp = JSON.parse(resp);
+					try {
+						var resp = JSON.parse(resp);
+					} catch (e) {
+						_msg("哇服务器炸了", 0);
+						return;
+					}
 
 					if (!resp.suc) {
 						_msg("server busy");
