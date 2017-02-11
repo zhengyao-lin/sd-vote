@@ -445,6 +445,7 @@ br {
 
 .sv-vcenter {
 	position: relative;
+	display: block;
 }
 
 .sv-selebox-checked > .sv-selebox-checked-layer {
