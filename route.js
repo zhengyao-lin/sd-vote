@@ -55,8 +55,8 @@ function checkValidIP(req, res, action, cb) { // cb(res, use_cap)
 					ip4 = ip4[ip4.length - 1];
 					iploc.getIPInfo(ip4, function (err, info) {
 						if (err == null) {
-							if (info.country == "美国") {
-								res.send(util.qerr("is maomi speaking?"));
+							if (info.country != "中国") {
+								res.send(util.qerr("no SHUAPIAO!"));
 								util.log("caught a maomi " + req.ip);
 								return;
 							}
