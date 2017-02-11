@@ -257,6 +257,8 @@ br {
 #sv-addsymb,
 #sv-submsymb {
 	position: relative;
+	display: block;
+
 	cursor: default;
 	pointer-events: none;
 
