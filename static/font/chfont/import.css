@@ -1,21 +1,34 @@
 @font-face {
-	font-family: 'tekai';
-	src: url('tekai.ttf') format('truetype');
+	font-family: "tekai";
+	src: url("tekai.ttf") format("truetype");
 	font-weight: normal;
 	font-style: normal;
 }
 
 @font-face {
-	font-family: 'mini-jiankai';
-	src: url('mini-jiankai.ttf') format('truetype');
+	font-family: "mini-jiankai";
+	src: url("mini-jiankai.ttf") format("truetype");
 	font-weight: normal;
 	font-style: normal;
 }
 
 @font-face {
-	font-family: 'milan';
-	src: url('milan.ttf') format('truetype');
+	font-family: "milan";
+	src: url("milan.ttf") format("truetype");
 	font-weight: normal;
 	font-style: normal;
 }
 
+@font-face {
+	font-family: "wenyue-xinqingnian";
+	src: url("WenYue-XinQingNianTi-NC-W8.otf");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "wenyue-gudianmingchao";
+	src: url("WenYue-GuDianMingChaoTi-NC-W5.otf");
+	font-weight: normal;
+	font-style: normal;
+}
