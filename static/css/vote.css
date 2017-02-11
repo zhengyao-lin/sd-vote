@@ -486,10 +486,10 @@ br {
 
 	text-align: center;
 
-	transition: top 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-	-moz-transition: top 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-	-webkit-transition: top 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-	-o-transition: top 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+	transition: top 1s cubic-bezier(0.19, 1, 0.22, 1);
+	-moz-transition: top 1s cubic-bezier(0.19, 1, 0.22, 1);
+	-webkit-transition: top 1s cubic-bezier(0.19, 1, 0.22, 1);
+	-o-transition: top 1s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 #sv-mmsg {

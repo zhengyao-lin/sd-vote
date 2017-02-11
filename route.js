@@ -10,6 +10,8 @@ var iploc = require("./iploc.js");
 var server = new mongodb.Server("localhost", 27017, { auto_reconnect: true });
 var db = new mongodb.Db("sdvote", server, { safe: true });
 
+var deadline = new Date("Sun Feb 12 2017 00:00:00 GMT+0800 (CST)");
+
 db.open();
 
 function getNewCandID(cb) {
@@ -55,7 +57,7 @@ function checkValidIP(req, res, action, cb) { // cb(res, use_cap)
 					ip4 = ip4[ip4.length - 1];
 					iploc.getIPInfo(ip4, function (err, info) {
 						if (err == null) {
-							if (info.country != "中国") {
+							if (info.country && info.country != "中国") {
 								res.send(util.qerr("no SHUAPIAO!"));
 								util.log("caught a maomi " + req.ip);
 								return;
@@ -119,6 +121,15 @@ exports.validate = function (req, res) {
 
 exports.regCand = function (req, res) {
 	util.log(req.ip + ": register attempt");
+
+	var date = new Date();
+
+	if (date > deadline) {
+		res.send(util.qerr("deadline passed", 3));
+		util.log(req.ip + ": deadline passed");
+		return;
+	}
+
 	var form = new multiparty.Form({ maxFilesSize: 1024 * 1024 * 2 });
 
 	form.parse(req, function(err, fields, files) {
@@ -168,6 +179,15 @@ exports.regCand = function (req, res) {
 
 exports.pollCand = function (req, res) {
 	util.log(req.ip + ": poll attempt");
+
+	var date = new Date();
+
+	if (date > deadline) {
+		res.send(util.qerr("deadline passed", 3));
+		util.log(req.ip + ": deadline passed");
+		return;
+	}
+
 	checkValidIP(req, res, "poll", function (res, use_cap) {
 		db.collection("cand", { safe: true }, util.errproc(res, function (cand) {
 			var candstr = req.query.cand.split("|");
@@ -289,4 +309,10 @@ exports.getView = function (req, res) {
 			return;
 		}));
 	}));
+};
+
+exports.getDeadline = function (req, res) {
+	util.log(req.ip + ": get dealine");
+	res.send(util.qjson(deadline.toString()));
+	return;
 };

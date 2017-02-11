@@ -34,6 +34,8 @@ app.get("/vote/get", route.getCand);
 app.get("/vote/incview", route.incView);
 app.get("/vote/getview", route.getView);
 
+app.get("/vote/ddl", route.getDeadline);
+
 var server = app.listen(80, function () {
 	var host = server.address().address;
 	var port = server.address().port;

@@ -130,7 +130,8 @@
 			星元是一款专为中学生设计的货币更多介绍
 			请勿上传涉及反动，淫秽色情或版权问题的图片或文字
 			哇服务器炸了
-			点击右上角问号查看帮助哦
+			点击右上角问号查看帮助哦投票快结束啦抓紧时间哦
+			已经截止啦啊啊啊投票已经截止啦与报告!总部失去联系...
 		</div>
 
 		<script>
@@ -149,6 +150,7 @@
 			(function ($) {
 				var color_box = [ "#1ABC9C", "#2ECC71", "#3498DB", "#9B59B6", "#E67E22", "#E74C3C" ];
 				var color_box2 = [ "#16A085", "#27AE60", "#2980B9", "#8E44AD", "#D35400", "#C0392B" ];
+				var ddl_passed = false;
 
 				function _setVCenter(pr, e) {
 					e.css("top", ((pr.height() - e.height()) / 2) + "px");
@@ -274,7 +276,28 @@
 					$("#sv-cover").css("left", "-100%");
 
 					setTimeout(function () {
-						_mmsg("点击右上角问号查看帮助哦");
+						_mmsg("点击右上角问号查看帮助哦", 4000, null, function () {
+							setTimeout(function () {
+								$.ajax({
+									url: "/vote/ddl", type: "GET",
+									success: function (dat) {
+										var date = new Date(JSON.parse(dat).dat);
+										var cur = new Date();
+
+										if (cur > date) {
+											ddl_passed = true;
+											_mmsg("投票已经截止啦", 10000);
+										} else {
+											_mmsg("投票快结束啦抓紧时间哦", 5000);
+										}
+									},
+
+									error: function () {
+										_mmsg("报告! 与总部失去联系...", 10000);
+									}
+								});
+							}, 500);
+						});
 					}, 1500);
 
 					return;
@@ -544,7 +567,8 @@
 				var _prompt = [
 					"不能投两次啊",
 					"每人最多添加一个选项额",
-					"图太大了orz"
+					"图太大了orz",
+					"已经截止啦啊啊啊"
 				];
 
 				function _submit() {
