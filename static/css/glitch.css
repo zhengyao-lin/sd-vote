@@ -51,6 +51,7 @@
 .glitch:after {
 	content: attr(data-text);
 	position: absolute;
+	display: inline-block;
 	left: 0px;
 	text-shadow: -1px 0 red;
 	top: 0;
@@ -112,6 +113,7 @@
 .glitch:before {
 	content: attr(data-text);
 	position: absolute;
+	display: inline-block;
 	left: -2px;
 	text-shadow: 1px 0 blue;
 	top: 0;
