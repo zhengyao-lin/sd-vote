@@ -7,7 +7,7 @@ var util = require("./util.js");
 var captcha = require("./captcha.js");
 var iploc = require("./iploc.js");
 
-var server = new mongodb.Server("localhost", 27017, { auto_reconnect: true });
+var server = new mongodb.Server("localhost", 3137, { auto_reconnect: true });
 var db = new mongodb.Db("sdvote", server, { safe: true });
 
 var deadline = new Date("Sun Feb 12 2017 00:00:00 GMT+0800 (CST)");
