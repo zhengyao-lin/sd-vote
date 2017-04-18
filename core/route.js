@@ -1,16 +1,19 @@
+"use strict";
+
+var multiparty = require('multiparty');
 var mongodb = require("mongodb");
 var crypto = require('crypto');
-var multiparty = require('multiparty');
 var fs = require("fs");
 
-var util = require("./util.js");
-var captcha = require("./captcha.js");
-var iploc = require("./iploc.js");
+var captcha = require("./captcha");
+var config = require("./config");
+var iploc = require("./iploc");
+var util = require("./util");
 
-var server = new mongodb.Server("localhost", 3137, { auto_reconnect: true });
-var db = new mongodb.Db("sdvote", server, { safe: true });
+var server = new mongodb.Server(config.db.url, config.db.port, config.db.opt);
+var db = new mongodb.Db(config.db.name, server, { safe: true });
 
-var deadline = new Date("Sun Feb 12 2017 00:00:00 GMT+0800 (CST)");
+var deadline = config.vote.ddl;
 
 db.open();
 
@@ -48,65 +51,64 @@ function checkValidIP(req, res, action, cb) { // cb(res, use_cap)
 	var cur_date = new Date();
 
 	db.collection("config", { safe: true }, util.errproc(res, function (conf) {
-		conf.findOne({}, util.errproc(res, function (ret) {
-			var use_cap = ret.last ? ((cur_date - new Date(ret.last)) < 1200000 /* 10 min */) : false;
+		conf.findOneAndUpdate({}, { $set: { last: cur_date.toString() } }, { upsert: true },
+			util.errproc(res, function (ret) {
 
-			conf.update({}, { $set: { last: cur_date.toString() } },
-				util.errproc(res, function () {
-					var ip4 = req.ip.split(":");
-					ip4 = ip4[ip4.length - 1];
-					iploc.getIPInfo(ip4, function (err, info) {
-						if (err == null) {
-							if (info.country && info.country != "中国") {
-								res.send(util.qerr("no SHUAPIAO!"));
-								util.log("caught a maomi " + req.ip);
+				var use_cap = ret.last ? ((cur_date - new Date(ret.last)) < 1200000 /* 10 min */) : false;
+				var ip4 = req.ip.split(":");
+				
+				ip4 = ip4[ip4.length - 1];
+				iploc.getIPInfo(ip4, function (err, info) {
+					if (err == null) {
+						if (info.country && info.country != "中国") {
+							res.send(util.qerr("no SHUAPIAO!"));
+							util.log("caught a maomi " + req.ip);
+							return;
+						}
+					} else util.log("ip loc err: " + err);
+
+					db.collection("pview", { safe: true }, util.errproc(res, function (col) {
+						var tmp = { ip: req.ip };
+						col.findOne(tmp, util.errproc(res, function (ret) {
+							if (!ret || (ret.prec && (new Date()) - (new Date(ret.prec))) < 8000) {
+								res.send(util.qerr("illegal attempt"));
+								util.log("illegal attempt");
 								return;
 							}
-						} else util.log("ip loc err: " + err);
 
-						db.collection("pview", { safe: true }, util.errproc(res, function (col) {
-							var tmp = { ip: req.ip };
-							col.findOne(tmp, util.errproc(res, function (ret) {
-								if (!ret || (ret.prec && (new Date()) - (new Date(ret.prec))) < 8000) {
-									res.send(util.qerr("illegal attempt"));
-									util.log("illegal attempt");
-									return;
-								}
+							db.collection("votedip", util.errproc(res, function (voted) {
+								voted.findOne({ ip: req.ip }, util.errproc(res, function (found) {
+									if (found && found[action]) {
+										res.send(util.qerr(
+											"duplicated ip attempt on action " + action,
+											action == "poll" ? 0 : (action == "reg" ? 1 : undefined)
+										));
+										util.log("duplicated ip attempt on action " + action);
+										return;
+									}
 
-								db.collection("votedip", util.errproc(res, function (voted) {
-									voted.findOne({ ip: req.ip }, util.errproc(res, function (found) {
-										if (found && found[action]) {
-											res.send(util.qerr(
-												"duplicated ip attempt on action " + action,
-												action == "poll" ? 0 : (action == "reg" ? 1 : undefined)
-											));
-											util.log("duplicated ip attempt on action " + action);
-											return;
-										}
+									var tmp = function (res, use_cap) {
+										var tmp = {};
+										tmp[action] = true;
+										tmp[action + "_query"] = req.query;
+										tmp[action + "_date"] = cur_date;
 
-										var tmp = function (res, use_cap) {
-											var tmp = {};
-											tmp[action] = true;
-											tmp[action + "_query"] = req.query;
-											tmp[action + "_date"] = cur_date;
+										voted.findOneAndUpdate({ ip: req.ip }, { $set: tmp },
+											{ new: true, upsert: true, returnOriginal: false }, util.errproc(res, function () {
+											cb(res, use_cap);
+										}));
+									};
 
-											voted.findOneAndUpdate({ ip: req.ip }, { $set: tmp },
-												{ new: true, upsert: true, returnOriginal: false }, util.errproc(res, function () {
-												cb(res, use_cap);
-											}));
-										};
-
-										if (use_cap) {
-											captcha.challenge(req, res, db, tmp);
-										} else {
-											tmp(res, false);
-										}
-									}));
+									if (use_cap) {
+										captcha.challenge(req, res, db, tmp);
+									} else {
+										tmp(res, false);
+									}
 								}));
 							}));
 						}));
-					});
-				}));
+					}));
+				});
 		}));
 	}));
 }

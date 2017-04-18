@@ -1,9 +1,13 @@
+"use strict";
+
 var gee = require("geetest");
-var util = require("./util.js");
+
+var config = require("./config");
+var util = require("./util");
 
 var cap = new gee({
-    geetest_id: "9c97bc8bebcf75269fafbfee223728e2",
-    geetest_key: "eef2bcff227c7178d631d3171de8f016"
+    geetest_id: config.captcha.id,
+    geetest_key: config.captcha.key
 });
 
 var cbs = {};

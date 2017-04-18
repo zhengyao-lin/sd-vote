@@ -5,7 +5,7 @@
 		<meta http-equiv="Pragma" content="no-cache">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 		
-		<title>星元投票</title>
+		<title>星元市场</title>
 
 		<link rel="stylesheet" href="font/fontawesome/import.css">
 		<link rel="stylesheet" href="font/alegreya/import.css">
@@ -23,7 +23,7 @@
 			<div id="sv-cover">
 				<div id="sv-qtitle" class="sv-noselect">
 					<span style="font-size: 140%;" >星元</span><br>
-					<span>头像投票</span><br>
+					<span>跳蚤市场</span><br>
 					<span style="font-size: 50%;">狂戳继续</span>
 				</div>
 			</div>
@@ -59,11 +59,17 @@
 								<span id="sv-addsymb" class="fa fa-plus"></span>
 							</div>
 							<div id="sv-addbtn-tinyform" style="display: none; opacity: 0;">
-								<div id="sv-addbtn-inputbox" class="sv-addbtn-inputbox">
+								<div id="sv-addbtn-inputbox-1" class="sv-addbtn-inputbox">
 									<input id="sv-addbtn-nameinput" class="sv-addbtn-nameinput" placeholder="name"><br>
 									<div class="sv-split"></div><br>
 									<textarea id="sv-addbtn-descrinput" class="sv-addbtn-descrinput" placeholder="description"></textarea>
 								</div>
+
+								<div id="sv-addbtn-inputbox-2" class="sv-addbtn-inputbox">
+									<div id="sv-addbtn-inputbox-2-cont" class="sv-vcenter">
+									</div>
+								</div>
+
 								<div id="sv-addbtn-photo">
 									<span id="sv-addbtn-photo-symb" class="fa fa-photo sv-vcenter" style="pointer-events: none;"></span>
 								</div>
@@ -659,6 +665,17 @@
 				}
 
 				function _submitNewIcon() {
+					// TODO: page 2
+					// $("#sv-addbtn-tinyform").addClass("sv-addbtn-tinyform-p2");
+					// $("#sv-addbtn-submit-symb").css("opacity", "0");
+
+					// setTimeout(function () {
+					// 	_updatePos();
+					// 	$("#sv-addbtn-submit-symb").removeClass("fa-arrow-right");
+					// 	$("#sv-addbtn-submit-symb").addClass("fa-check");
+					// 	$("#sv-addbtn-submit-symb").css("opacity", "1");
+					// }, 300);
+
 					var name = $("#sv-addbtn-nameinput").val();
 					var descr = $("#sv-addbtn-descrinput").val();
 
@@ -707,7 +724,7 @@
 						$("#sv-addbtn-submit-symb").removeClass("fa-spin");
 						$("#sv-addbtn-submit-symb").addClass("fa-check");
 
-						$("#sv-addbtn-submit").click(_submitNewIcon);
+						// $("#sv-addbtn-submit").click(_submitNewIcon);
 					};
 
 					_load_start();
@@ -814,8 +831,14 @@
 						'<div class="sv-selebox sv-noselect"> \
 							<div class="sv-thumb sv-img sv-noselect" style="background-image: url(\'/upload/' + allcand[i].photo + '\');"></div> \
 							<div class="sv-namecard">' +
-								(i < 3 ? "<span class='fa fa-star sv-namecard-star sv-namecard-star-" + (i + 1) + "'></span>" : "") + 
-								allcand[i].name + ' (' + allcand[i].poll + (allcand[i].poll > 1 ? " votes, " : " vote, ") + (sum ? truncdig(allcand[i].poll / sum * 100, 2) : "0") + '%)' +
+								'<div class="sv-namecard-right-bar">' +
+									'<span class="sv-namecard-poll">' + allcand[i].poll + '</span>' +
+									(i < 3 ? "<span class='fa fa-star sv-namecard-star sv-namecard-star-" + (i + 1) + "'></span>" : "") +
+								'</div>' +
+								allcand[i].name + // ' (' +
+								// 	allcand[i].poll +
+								// 	(allcand[i].poll > 1 ? " votes, " : " vote, ") +
+								// 	(sum ? truncdig(allcand[i].poll / sum * 100, 2) : "0") + '%)' +
 							'</div> \
 							<div class="sv-selebox-checked-layer"><span class="fa fa-check-circle sv-selebox-check sv-vcenter"></span></div> \
 							<div id="sv-tag-candid" style="display: none;">' + i + '</div> \

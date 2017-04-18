@@ -1,3 +1,4 @@
+var bodyparser = require("body-parser");
 var http = require("http");
 
 exports.getIPInfo = function(ip, cb) {
